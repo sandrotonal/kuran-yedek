@@ -9,11 +9,7 @@ interface AudioState {
     error: string | null;
 }
 
-interface Worker {
-    text: string;
-    timestamp_from: number;
-    timestamp_to: number;
-}
+
 
 // 7 = Mishary Rashid Alafasy (Popüler ve kaliteli)
 const RECITER_ID = 7;
@@ -142,7 +138,7 @@ export function useAudio(sure: number, ayet: number) {
                     setActiveWordIndex(-1);
                 });
 
-                audio.addEventListener('error', (e) => {
+                audio.addEventListener('error', () => {
                     setState(prev => ({ ...prev, isLoading: false, isPlaying: false, error: "Oynatma hatası" }));
                 });
 

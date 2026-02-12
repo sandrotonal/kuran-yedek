@@ -1,121 +1,61 @@
-namaz vakıt modu kısmında bazı degısıklıkler oalcak 
+# 🚀 Yeni Özellik İstekleri ve İlerleme Durumu
 
+## ✅ Tamamlanan Özellikler
 
+- [x] **1️⃣ Kıble Bulucu (Mobil Sensör Destekli)**
+  - *Durum:* Tamamlandı. Pusula arayüzü ve API entegrasyonu yapıldı.
+  - *Özellik:* Hassas yön bulma, animasyonlu pusula.
 
+- [x] **3️⃣ Akıllı Namaz Vakitleri Sistemi**
+  - *Durum:* Geliştirildi.
+  - *Özellik:* Otomatik bildirimler, ezan vakti sesli uyarı, geri sayım.
 
-1️⃣ BUTON YERİNE “NİYET SEÇİMİ” YAKLAŞIMI (en güçlü UX)
-❌ Şu anki problem
+- [x] **6️⃣ Esmaül Hüsna (Etkileşimli)**
+  - *Durum:* Tamamlandı.
+  - *Özellik:* 99 İsim, Türkçe anlamlar, Sesli okuma (TTS), Favorilere ekleme.
 
-“NAMAZA YÖNEL” = klasik CTA
+- [x] **7️⃣ Vaktin Ayeti (Zaman Bazlı Ayet Sistemi)**
+  - *Durum:* Tamamlandı.
+  - *Özellik:* Vakte özel ayet/konu önerisi, paylaşma butonu.
 
-“10 dk ertele / sessize al” = alarm uygulaması hissi
+---
 
-✅ Yeni yaklaşım
+## 📝 Yapılacaklar Listesi (Sırasıyla)
 
-Buton yok. Seçim var.
+- [ ] **2️⃣ Konuma Göre Yakın Camiler**
+  - *Hedef:* Kullanıcının konumuna en yakın camileri listeleme ve haritada gösterme.
+  - *Yöntem:* OpenStreetMap / Leaflet (veya Google Maps Link) kullanarak ücretsiz çözüm.
 
-📱 Ekran düzeni
+- [ ] **4️⃣ Kaza Namaz Takip Sistemi**
+  - *Hedef:* Kılınamayan namazların kaydını tutma, grafiksel raporlama.
+  - *Detay:* Günlük giriş, borç hesaplama, motivasyon kartları.
 
-Saat ve ayetin altında:
+- [ ] **5️⃣ Dini Günler & Hatırlatıcı**
+  - *Hedef:* Kandil, bayram ve özel günlerin takvimi.
+  - *Detay:* Geri sayım, o güne özel içerik bildirimi.
 
-○ Şimdi kılacağım
-○ Birazdan
-○ Şu an müsait değilim
+---
 
+### Detaylı Gereksinimler (Orijinal Notlar)
 
-Seçince:
+#### 2️⃣ Konuma Göre Yakın Camiler
+🎯 Amaç: Kullanıcının bulunduğu konuma en yakın camileri göstermek.
+📱 Mobilde Çalışma Mantığı:
+- GPS konum alınır
+- Harita SDK (Leaflet / Mapbox / Google Maps)
+- Mosque etiketiyle filtreleme
+- Liste + Harita sekmesi
+- Gösterilecek Bilgiler: Cami adı, uzaklık, yol tarifi butonu.
 
-ekran yumuşak fade ile kapanır
+#### 4️⃣ Kazalar Namaz Takip Sistemi
+🎯 Amaç: Kullanıcının kaza namazlarını takip edebilmesi.
+📱 Nasıl Çalışır:
+- Günlük kılınan namaz işaretleme
+- Kaza borcu girme
+- Otomatik düşme sistemi
+- Grafikle ilerleme gösterme
 
-ek bir onay çıkmaz
-
-🧠 Psikoloji
-
-kullanıcı “tıklamıyor”
-
-niyet beyan ediyor
-
-Bu, ibadet app’lerinde çok üst seviye bir yaklaşım.
-
-2️⃣ ERTELEMEYİ SAYI DEĞİL “ZAMAN HİSSİ” YAP
-❌ Şu an
-
-“10 dk ertele”
-
-çok mekanik
-
-✅ Öneri
-
-Dakika yazma, his yaz:
-
-• Biraz sonra
-• Uygun olunca
-• Bu vakti sessizce geç
-
-
-Sistemde karşılığı:
-
-Biraz sonra → 5 dk
-
-Uygun olunca → 15 dk
-
-Sessizce geç → o vakit için bildirim kapalı
-
-Ama kullanıcı dakika görmez.
-
-3️⃣ SESSİZE ALMA = GİZLİ VE NAZİK
-❌ Ayrı “Sessize Al” butonu
-
-Bu çok sert.
-
-✅ Daha iyi çözüm
-
-Sessize alma ikincil, silik bir metin olsun:
-
-“Bu vakit için hatırlatma istemiyorum”
-
-küçük font
-
-gri
-
-underline bile olabilir
-
-Bu bir itiraz değil, ricayı kabul gibi durur.
-
-4️⃣ TEK MERKEZLİ ANA AKSİYON (BUTON SEVMİYORSAN)
-
-Eğer illa tek aksiyon olacaksa:
-
-🟢 Ana alan:
-
-Saatin altındaki boşluk dokunulabilir alan olsun
-(Buton görünmez)
-
-Ortaya sadece şu yazı gelsin:
-
-“Namaza yönel”
-
-Basınca:
-
-ekran kapanır
-
-başka sayfaya geçmez
-
-⚪ Alt tarafta (çok silik):
-
-“Birazdan hatırlat”
-“Bu vakti sessize al”
-
-5️⃣ MİKRO ANİMASYON (çok fark yaratır)
-
-Seçim yapıldığında:
-
-saat yavaşça küçülür
-
-ayet kaybolur
-
-ekran kararıp kapanır
-
-Kullanıcı şunu hisseder:
-
-“Tamam, anlaşıldım.”
+#### 5️⃣ Dini Günler & Hatırlatıcı
+🎯 Amaç: Önemli İslami günleri kaçırmamak.
+Özellikler: Kandiller, Ramazan başlangıcı, Bayramlar, Aşure günü, Hicri takvim.
+Mobil Güçlü Özellik: Bildirim hatırlatma, O güne özel ayet / hadis gösterme.

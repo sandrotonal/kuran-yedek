@@ -16,7 +16,7 @@ export function PrayerReminder({
     onDismiss,
     onSnooze,
     onMute,
-    isMuted,
+
     content,
     currentTime,
     prayerName = "Vakit Girdi"

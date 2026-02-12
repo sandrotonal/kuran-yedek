@@ -1,0 +1,98 @@
+---
+description: Frontend TypeScript ve React component yazma standartları
+alwaysApply: false
+enabled: true
+updatedAt: 2026-02-07T17:24:03.557Z
+provider: 
+---
+
+# TypeScript & React Standards
+
+## 🎯 Component Yapısı
+
+### Temel Component Template
+```typescript
+import React, { FC } from 'react'
+
+interface ComponentProps {
+  title: string
+  onAction: (id: string) => void
+  isLoading?: boolean
+}
+
+export const ComponentName: FC<ComponentProps> = ({ 
+  title, 
+  onAction, 
+  isLoading = false 
+}) => {
+  return (
+    <div className="p-4">
+      <h1>{title}</h1>
+    </div>
+  )
+}
+```
+
+## ✅ Type Guidelines
+
+### 1. Props Typing
+- Her zaman `FC<Props>` veya `React.FC` kullan
+- Props interface'i component'in yanında tanımla
+- Optional props: `?` işareti
+
+### 2. State Typing
+```typescript
+const [ayetler, setAyetler] = useState<Ayet[]>([])
+const [selectedAyet, setSelectedAyet] = useState<Ayet | null>(null)
+```
+
+### 3. API Response Typing
+```typescript
+interface ApiResponse<T> {
+  success: boolean
+  data: T
+  error: string | null
+}
+
+interface Ayet {
+  id: number
+  sure: number
+  ayet: number
+  metin: string
+  embedding?: number[]
+}
+```
+
+## 📦 Hook Patterns
+
+### Query Hook
+```typescript
+import { useQuery } from '@tanstack/react-query'
+
+export const useGetAyet = (sure: number, ayet: number) => {
+  return useQuery({
+    queryKey: ['ayet', sure, ayet],
+    queryFn: async () => {
+      const res = await fetch(`/api/ayet/${sure}/${ayet}`)
+      return res.json()
+    }
+  })
+}
+```
+
+## 🎨 Tailwind CSS Naming
+- Utility-first approach
+- Color palette: `slate`, `blue`, `emerald`
+- Dark mode: `dark:` prefix
+- Responsive: `sm:`, `md:`, `lg:`, `xl:`
+
+## ⚡ Performance
+- `useMemo` use expensive calculations için
+- `useCallback` onHandler için parent props'tan geçiliyorsa
+- Lazy loading: `React.lazy()` + `Suspense`
+
+## ❌ Kaçınılacaklar
+- `any` type'ı use etme
+- Direct DOM manipulation (useState + render)
+- Global state için Redux yerine Context API / Zustand
+- Inline function definitions

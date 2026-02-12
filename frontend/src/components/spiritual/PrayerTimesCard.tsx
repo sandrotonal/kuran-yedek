@@ -57,7 +57,43 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
         }
 
         loadTimes();
+        loadTimes();
     }, []);
+
+    // 3. Automatic Trigger & Sound Logic
+    useEffect(() => {
+        const checkTime = () => {
+            const now = new Date();
+            const currentTimeStr = now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+            const currentPrayer = times.find(t => t.time === currentTimeStr);
+
+            if (currentPrayer && notifPermission) {
+                // Check if we already triggered for this specific time to avoid loop
+                // Simple debounce: could rely on state, but here we trust the reminder is active for 20s
+                // and won't re-trigger if isActive is true.
+                // However, we need to check if reminder is NOT active to trigger it.
+                // We pass this logic to triggerReminder/Audio.
+                triggerReminder();
+
+                // Play Sound if not muted
+                if (!isMuted) {
+                    // Using a placeholder soft notification sound (or adhan if available)
+                    // Using a simple beep data URI for reliability without external assets for now
+                    // In production, replace with: new Audio('/adhan.mp3').play();
+                    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'); // Soft chime
+                    audio.volume = 0.5;
+                    audio.play().catch(e => console.log("Audio play failed (interaction needed first):", e));
+                }
+
+                // Browser Notification
+                PrayerTimesService.sendNotification("Vakit Girdi", `${currentPrayer.name} vakti girdi. ${currentPrayer.context}`);
+            }
+        };
+
+        const timer = setInterval(checkTime, 60000); // Check every minute
+        return () => clearInterval(timer);
+    }, [times, notifPermission, isMuted, triggerReminder]);
 
     const handleEnableNotifications = async () => {
         if (notifPermission) {
@@ -182,19 +218,32 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                                 </div>
                             </div>
 
-                            {suggestion.ayetLink && (
+                            <div className="flex gap-1">
+                                {suggestion.ayetLink && (
+                                    <button
+                                        onClick={() => {
+                                            if (onNavigate && suggestion.ayetLink) {
+                                                const [sureStr, ayetStr] = suggestion.ayetLink.split(':');
+                                                onNavigate(parseInt(sureStr), parseInt(ayetStr));
+                                            }
+                                        }}
+                                        className="px-3 py-1.5 bg-theme-surface hover:bg-theme-bg border border-theme-border/30 rounded text-[10px] font-medium transition-colors"
+                                    >
+                                        Oku: {suggestion.ayetLink}
+                                    </button>
+                                )}
                                 <button
                                     onClick={() => {
-                                        if (onNavigate && suggestion.ayetLink) {
-                                            const [sureStr, ayetStr] = suggestion.ayetLink.split(':');
-                                            onNavigate(parseInt(sureStr), parseInt(ayetStr));
-                                        }
+                                        const text = `Vaktin Ayeti: ${suggestion.topic}\nKuran Anlam Haritası`;
+                                        navigator.clipboard.writeText(text);
+                                        alert("Metin kopyalandı!");
                                     }}
-                                    className="px-3 py-1.5 bg-theme-surface hover:bg-theme-bg border border-theme-border/30 rounded text-[10px] font-medium transition-colors"
+                                    className="p-1.5 bg-theme-surface hover:bg-theme-bg border border-theme-border/30 rounded text-theme-muted hover:text-emerald-500 transition-colors"
+                                    title="Paylaş"
                                 >
-                                    Oku: {suggestion.ayetLink}
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
                                 </button>
-                            )}
+                            </div>
                         </div>
                     )}
                 </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+
 
 interface LogoProps {
     className?: string; // For sizing and colors (e.g., "w-10 h-10 text-emerald-500")

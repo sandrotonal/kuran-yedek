@@ -25,8 +25,7 @@ export function AyetCard({
     const [isExpanded, setIsExpanded] = useState(isMain);
     const { isPlaying, isLoading, togglePlay, segments, activeWordIndex } = useAudio(sure, ayet);
 
-    // Get Surah Info
-    const surahInfo = SURAHS.find(s => s.id === sure);
+
 
     // Auto expand when playing to show karaoke
     useEffect(() => {
@@ -75,7 +74,7 @@ export function AyetCard({
         }
     };
 
-    const percentage = similarityScore ? Math.round(similarityScore * 100) : 0;
+
 
     const getCardStyle = () => {
         if (isMain) {

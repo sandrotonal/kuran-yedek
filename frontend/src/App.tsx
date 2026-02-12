@@ -13,6 +13,10 @@ import { transformToGraphData } from './lib/graphUtils';
 import { useResponsive } from './hooks/useResponsive';
 import { AyetContextSection } from './components/AyetContextSection';
 import { PrayerTimesCard } from './components/spiritual/PrayerTimesCard';
+import { QiblaCompass } from './components/spiritual/QiblaCompass';
+import { EsmaulHusnaView } from './components/spiritual/EsmaulHusnaView';
+import { MosqueFinder } from './components/spiritual/MosqueFinder';
+import { PrayerDebtTracker } from './components/spiritual/PrayerDebtTracker';
 
 const queryClient = new QueryClient();
 
@@ -22,13 +26,16 @@ function AppContent() {
     const [searchParams, setSearchParams] = useState<{ sure: number; ayet: number } | null>(null);
     const [selectedNode, setSelectedNode] = useState<any>(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [showQibla, setShowQibla] = useState(false);
+    const [showEsmaulHusna, setShowEsmaulHusna] = useState(false);
+    const [showMosqueFinder, setShowMosqueFinder] = useState(false);
+    const [showPrayerDebt, setShowPrayerDebt] = useState(false);
 
     const { isMobile } = useResponsive();
 
     // Initialize dark mode on mount
     useEffect(() => {
         document.documentElement.classList.add('dark');
-        console.log('Mobile detected:', isMobile);
     }, [isMobile]);
 
     const { data, isLoading, isError } = useQuery({
@@ -73,7 +80,6 @@ function AppContent() {
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-3 md:gap-4">
                                 {/* Menu Button */}
-                                {/* Menu Button with Enhanced Hover */}
                                 <button
                                     onClick={() => setIsMenuOpen(true)}
                                     className="p-2.5 rounded-xl hover:bg-theme-surface text-theme-text transition-all duration-300 hover:scale-110 active:scale-95 hover:shadow-lg hover:shadow-emerald-500/10 group border border-transparent hover:border-theme-border/50"
@@ -149,10 +155,6 @@ function AppContent() {
                         </div>
                     ) : searchParams ? (
                         <div className="mt-8 transition-opacity duration-500 animate-fadeIn">
-
-
-
-
                             {/* Main Ayet Card & Content Wrapper with Key for Re-animation */}
                             {data?.center && (
                                 <div key={`main-${data.center.sure}-${data.center.ayet}`} className="animate-slideUp">
@@ -287,14 +289,10 @@ function AppContent() {
                     />
                 )}
 
-                {/* Footer - "Trust & Transparency" Area (Refined Proportions) */}
+                {/* Footer */}
                 <footer className="mt-16 pb-8 pt-8 relative overflow-hidden border-t border-theme-border/40">
-                    {/* Subtle Background Pattern */}
                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/arabesque.png')] opacity-[0.02] dark:opacity-[0.04] pointer-events-none"></div>
-
                     <div className="max-w-md mx-auto px-6 relative z-10 text-center">
-
-                        {/* 1. Main Title & Academic Context */}
                         <div className="flex flex-col items-center gap-1 mb-5">
                             <h3 className="text-sm font-bold text-slate-700 dark:text-slate-300 flex items-center gap-2 tracking-wide">
                                 <Logo className="w-4 h-4 text-emerald-600/90 dark:text-emerald-500/90" />
@@ -304,11 +302,7 @@ function AppContent() {
                                 Resmî Mealler & Anlamsal Haritalama Teknolojisi
                             </p>
                         </div>
-
-                        {/* Divider - Subtle & Short */}
                         <div className="w-12 h-px bg-emerald-500/20 mx-auto mb-5"></div>
-
-                        {/* 2. Developer Area (Balanced) */}
                         <div className="flex flex-col items-center gap-1">
                             <span className="text-[9px] tracking-[0.2em] text-slate-400 dark:text-slate-500 font-bold uppercase opacity-80">
                                 GELİŞTİRİCİ
@@ -326,7 +320,31 @@ function AppContent() {
                 isOpen={isMenuOpen}
                 onClose={() => setIsMenuOpen(false)}
                 onNavigate={handleSearch}
+                onOpenQibla={() => { setIsMenuOpen(false); setShowQibla(true); }}
+                onOpenEsmaulHusna={() => { setIsMenuOpen(false); setShowEsmaulHusna(true); }}
+                onOpenMosqueFinder={() => { setIsMenuOpen(false); setShowMosqueFinder(true); }}
+                onOpenPrayerDebt={() => { setIsMenuOpen(false); setShowPrayerDebt(true); }}
             />
+
+            {/* Qibla Compass Overlay */}
+            {showQibla && (
+                <QiblaCompass onClose={() => setShowQibla(false)} />
+            )}
+
+            {/* Esmaül Hüsna Overlay */}
+            {showEsmaulHusna && (
+                <EsmaulHusnaView onClose={() => setShowEsmaulHusna(false)} />
+            )}
+
+            {/* Mosque Finder Overlay */}
+            {showMosqueFinder && (
+                <MosqueFinder onClose={() => setShowMosqueFinder(false)} />
+            )}
+
+            {/* Prayer Debt Tracker Overlay */}
+            {showPrayerDebt && (
+                <PrayerDebtTracker onClose={() => setShowPrayerDebt(false)} />
+            )}
         </div>
     );
 }

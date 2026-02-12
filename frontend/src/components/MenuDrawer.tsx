@@ -5,14 +5,19 @@ interface MenuDrawerProps {
     isOpen: boolean;
     onClose: () => void;
     onNavigate: (sure: number, ayet: number) => void;
+    onOpenQibla: () => void;
+    onOpenEsmaulHusna: () => void;
+    onOpenEsmaulHusna: () => void;
+    onOpenMosqueFinder: () => void;
+    onOpenPrayerDebt: () => void;
 }
 
-type TabType = 'surah' | 'juz' | 'favorites';
+type TabType = 'surah' | 'juz' | 'favorites' | 'discover';
 
 // Placeholder Juz Data (To be filled accurately later or by another service)
 const JUZ_LIST = Array.from({ length: 30 }, (_, i) => ({ id: i + 1, label: `${i + 1}. Cüz` }));
 
-export function MenuDrawer({ isOpen, onClose, onNavigate }: MenuDrawerProps) {
+export function MenuDrawer({ isOpen, onClose, onNavigate, onOpenQibla, onOpenEsmaulHusna, onOpenMosqueFinder, onOpenPrayerDebt }: MenuDrawerProps) {
     const [activeTab, setActiveTab] = useState<TabType>('surah');
     const [searchTerm, setSearchTerm] = useState('');
     const [favorites, setFavorites] = useState<{ sure: number, ayet: number, date: number }[]>([]);
@@ -58,10 +63,13 @@ export function MenuDrawer({ isOpen, onClose, onNavigate }: MenuDrawerProps) {
     useEffect(() => {
         if (isOpen) {
             setRender(true);
-            // Small delay to ensure browser paints initial state before animating in
-            // Small delay to ensure browser paints initial state before animating in
-            const timer = setTimeout(() => setIsVisible(true), 10);
-            return () => clearTimeout(timer);
+            // Double RAF ensures the browser has painted the "hidden" state
+            // before we toggle the class to trigger the transition.
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    setIsVisible(true);
+                });
+            });
         } else {
             setIsVisible(false);
             const timer = setTimeout(() => {
@@ -100,25 +108,28 @@ export function MenuDrawer({ isOpen, onClose, onNavigate }: MenuDrawerProps) {
                         </button>
                     </div>
 
-                    {/* Search Bar */}
-                    <div className="relative">
-                        <input
-                            type="text"
-                            placeholder="Sure ara (ör: Yasin)..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 backdrop-blur-md transition-all"
-                        />
-                        <svg className="w-5 h-5 text-white/60 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                    </div>
+                    {/* Search Bar - Only show on relevant tabs */}
+                    {activeTab !== 'discover' && (
+                        <div className="relative">
+                            <input
+                                type="text"
+                                placeholder="Sure ara (ör: Yasin)..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 backdrop-blur-md transition-all"
+                            />
+                            <svg className="w-5 h-5 text-white/60 absolute left-3 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                        </div>
+                    )}
                 </div>
 
                 {/* Tabs */}
-                <div className="flex p-2 gap-2 bg-theme-surface border-b border-theme-border shadow-sm shrink-0">
+                <div className="flex p-2 gap-2 bg-theme-surface border-b border-theme-border shadow-sm shrink-0 overflow-x-auto no-scrollbar">
                     {[
                         { id: 'surah', label: 'Sureler' },
                         { id: 'juz', label: 'Cüzler' },
-                        { id: 'favorites', label: 'Favoriler' }
+                        { id: 'favorites', label: 'Favoriler' },
+                        { id: 'discover', label: 'Keşfet' }
                     ].map((tab) => (
                         <button
                             key={tab.id}
@@ -127,7 +138,7 @@ export function MenuDrawer({ isOpen, onClose, onNavigate }: MenuDrawerProps) {
                                 hapticFeedback(5);
                             }}
                             className={`
-                                flex-1 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 relative overflow-hidden
+                                flex-1 py-2.5 px-3 whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-300 relative overflow-hidden
                                 ${activeTab === tab.id
                                     ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 shadow-inner'
                                     : 'text-theme-muted hover:bg-theme-bg'
@@ -242,6 +253,97 @@ export function MenuDrawer({ isOpen, onClose, onNavigate }: MenuDrawerProps) {
                             )}
                         </div>
                     )}
+
+                    {/* DISCOVER TAB */}
+                    {activeTab === 'discover' && (
+                        <div className="grid grid-cols-1 gap-4 pb-20 p-2">
+                            {/* Features Grid */}
+                            <div className="grid grid-cols-2 gap-4">
+                                {/* Mosque Finder Button */}
+                                <button
+                                    onClick={() => {
+                                        hapticFeedback(10);
+                                        onOpenMosqueFinder();
+                                    }}
+                                    className="group relative overflow-hidden p-5 rounded-2xl bg-theme-surface border border-theme-border hover:border-emerald-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-left flex flex-col items-start"
+                                >
+                                    <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-10 transition-opacity transform group-hover:rotate-12 duration-500">
+                                        <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 12h3v8h6v-6h2v6h6v-8h3L12 2z" /></svg>
+                                    </div>
+
+                                    <div className="w-12 h-12 mb-4 bg-emerald-100 dark:bg-emerald-900/30 rounded-2xl flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 shadow-sm">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                                    </div>
+                                    <span className="font-bold text-lg text-theme-text group-hover:text-emerald-600 transition-colors">Yakın Camiler</span>
+                                    <span className="text-xs text-theme-muted mt-1 leading-relaxed">Çevrendeki ibadethaneleri bul</span>
+                                </button>
+
+                                {/* Qibla Finder Button */}
+                                <button
+                                    onClick={() => {
+                                        hapticFeedback(10);
+                                        onOpenQibla();
+                                    }}
+                                    className="group relative overflow-hidden p-5 rounded-2xl bg-theme-surface border border-theme-border hover:border-emerald-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-left flex flex-col items-start"
+                                >
+                                    <div className="absolute -right-4 -top-4 opacity-[0.03] group-hover:opacity-10 transition-opacity transform group-hover:rotate-45 duration-500">
+                                        <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L22 22L12 18L2 22L12 2Z" /></svg>
+                                    </div>
+
+                                    <div className="w-12 h-12 mb-4 bg-blue-100 dark:bg-blue-900/30 rounded-2xl flex items-center justify-center text-blue-600 dark:text-blue-400 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-300 shadow-sm">
+                                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                                    </div>
+                                    <span className="font-bold text-lg text-theme-text group-hover:text-blue-600 transition-colors">Kıble Bulucu</span>
+                                    <span className="text-xs text-theme-muted mt-1 leading-relaxed">Pusula ile yönünü tayin et</span>
+                                </button>
+                            </div>
+
+                            {/* Esmaül Hüsna Button (Full Width) */}
+                            <button
+                                onClick={() => {
+                                    hapticFeedback(10);
+                                    onOpenEsmaulHusna();
+                                }}
+                                className="group relative overflow-hidden p-5 rounded-2xl bg-theme-surface border border-theme-border hover:border-amber-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-left flex items-center gap-5"
+                            >
+                                <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.03] group-hover:opacity-10 transition-opacity transform scale-150">
+                                    <span className="font-arabic text-9xl">الله</span>
+                                </div>
+
+                                <div className="w-16 h-16 shrink-0 bg-amber-100 dark:bg-amber-900/30 rounded-2xl flex items-center justify-center text-amber-600 dark:text-amber-400 group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                    <span className="font-arabic text-3xl pb-2">الله</span>
+                                </div>
+
+                                <div>
+                                    <span className="font-bold text-xl text-theme-text group-hover:text-amber-600 transition-colors block">Esmaül Hüsna</span>
+                                    <span className="text-sm text-theme-muted mt-1 block">Allah'ın 99 güzel ismini ve manalarını keşfet</span>
+                                </div>
+                            </button>
+
+                            {/* Kaza Takip Button (Full Width) */}
+                            <button
+                                onClick={() => {
+                                    hapticFeedback(10);
+                                    onOpenPrayerDebt();
+                                }}
+                                className="group relative overflow-hidden p-5 rounded-2xl bg-theme-surface border border-theme-border hover:border-indigo-500/50 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 text-left flex items-center gap-5"
+                            >
+                                <div className="absolute right-0 top-1/2 -translate-y-1/2 opacity-[0.03] group-hover:opacity-10 transition-opacity transform scale-150 rotate-12">
+                                    <svg className="w-40 h-40" fill="currentColor" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z" /></svg>
+                                </div>
+
+                                <div className="w-16 h-16 shrink-0 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center text-indigo-600 dark:text-indigo-400 group-hover:scale-110 transition-all duration-300 shadow-sm">
+                                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                                </div>
+
+                                <div>
+                                    <span className="font-bold text-xl text-theme-text group-hover:text-indigo-600 transition-colors block">Kaza Takip</span>
+                                    <span className="text-sm text-theme-muted mt-1 block">Kılınmayan namazlarınızı kaydedin ve takip edin</span>
+                                </div>
+                            </button>
+                        </div>
+                    )}
+
                 </div>
             </div>
         </>

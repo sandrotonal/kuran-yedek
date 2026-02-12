@@ -53,9 +53,9 @@ export const PrayerTimesService = {
         const coordinates = new Coordinates(lat, lng);
         const params = CalculationMethod.Turkey();
         const prayerTimes = new PrayerTimes(coordinates, date, params);
+        const next = prayerTimes.nextPrayer();
 
-        const now = new Date();
-        const next = prayerTimes.nextPrayer(); // returns 'fajr', 'sunrise', etc.
+
 
         // Mapping to our Turkish UI & Context
         const times = [

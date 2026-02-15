@@ -48,6 +48,9 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                                         next.name === 'Akşam' ? 'maghrib' :
                                             next.name === 'Yatsı' ? 'isha' : 'other'
                     ));
+                } else {
+                    // Post-Isha Fallback: Show Isha suggestions or General Night focus
+                    setSuggestion(PrayerTimesService.getContextualSuggestion('isha'));
                 }
             } catch (e) {
                 console.error("Failed to load prayer times", e);
@@ -115,7 +118,14 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
 
     if (loading) return <div className="h-24 animate-pulse bg-theme-bg/50 rounded-xl my-4"></div>;
 
-    const nextPrayer = times.find(t => t.isNext);
+    // Determine active prayer context
+    // If nextPrayer is found (standard case), use it.
+    // If NOT found (post-Isha), fallback to Isha (Yatsı) to keep the UI active at night.
+    let activeContextPrayer = times.find(t => t.isNext);
+    if (!activeContextPrayer && times.length > 0) {
+        // Fallback to Yatsı (Last item)
+        activeContextPrayer = times[times.length - 1];
+    }
 
     return (
         <div className="bg-gradient-to-br from-theme-surface to-theme-bg border border-theme-border/50 rounded-2xl p-5 shadow-sm relative overflow-hidden group">
@@ -195,30 +205,31 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                 ))}
             </div>
 
-            {/* Context Line (for Next Prayer) */}
-            {nextPrayer && (
+            {/* Context Line (for Next/Active Prayer) */}
+            {/* Context Line (for Next/Active Prayer) */}
+            {activeContextPrayer && (
                 <div className="mt-4 pt-4 border-t border-theme-border/10">
-                    <div className="text-center mb-2">
+                    <div className="text-center mb-3">
                         <p className="text-xs text-theme-muted/80 italic font-serif">
-                            "{nextPrayer.context}"
+                            "{activeContextPrayer.context}"
                         </p>
                     </div>
 
                     {suggestion && (
-                        <div className="flex items-center justify-between bg-theme-bg/30 rounded-lg p-2.5 border border-theme-border/20">
+                        <div className="flex items-center justify-between bg-theme-bg/30 rounded-2xl p-3 border border-theme-border/20 shadow-sm hover:bg-theme-bg/50 transition-colors">
                             <div className="flex items-center gap-3">
-                                <div className="p-1.5 bg-emerald-500/10 rounded-full text-emerald-500">
+                                <div className="p-2 bg-emerald-500/10 rounded-full text-emerald-500">
                                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                                     </svg>
                                 </div>
                                 <div className="text-left">
-                                    <p className="text-[10px] uppercase font-bold text-theme-muted tracking-wide">Manevi Odak</p>
-                                    <p className="text-xs font-semibold text-theme-text">{suggestion.topic}</p>
+                                    <p className="text-[10px] uppercase font-bold text-theme-muted tracking-wide mb-0.5">Manevi Odak</p>
+                                    <p className="text-xs font-bold text-theme-text leading-tight">{suggestion.topic}</p>
                                 </div>
                             </div>
 
-                            <div className="flex gap-1">
+                            <div className="flex items-center gap-2 pl-2">
                                 {suggestion.ayetLink && (
                                     <button
                                         onClick={() => {
@@ -227,7 +238,7 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                                                 onNavigate(parseInt(sureStr), parseInt(ayetStr));
                                             }
                                         }}
-                                        className="px-3 py-1.5 bg-theme-surface hover:bg-theme-bg border border-theme-border/30 rounded text-[10px] font-medium transition-colors"
+                                        className="h-8 px-3 bg-white/50 dark:bg-black/20 hover:bg-emerald-500/10 border border-theme-border/20 hover:border-emerald-500/30 rounded-full text-[10px] font-bold text-theme-text hover:text-emerald-600 dark:hover:text-emerald-400 transition-all active:scale-95 shadow-sm flex items-center justify-center"
                                     >
                                         Oku: {suggestion.ayetLink}
                                     </button>
@@ -236,12 +247,15 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                                     onClick={() => {
                                         const text = `Vaktin Ayeti: ${suggestion.topic}\nKuran Anlam Haritası`;
                                         navigator.clipboard.writeText(text);
-                                        alert("Metin kopyalandı!");
+                                        const btn = document.getElementById('copy-btn-feedback');
+                                        if (btn) btn.classList.add('text-emerald-500', 'scale-110');
+                                        setTimeout(() => btn?.classList.remove('text-emerald-500', 'scale-110'), 1000);
                                     }}
-                                    className="p-1.5 bg-theme-surface hover:bg-theme-bg border border-theme-border/30 rounded text-theme-muted hover:text-emerald-500 transition-colors"
+                                    id="copy-btn-feedback"
+                                    className="w-8 h-8 flex items-center justify-center bg-white/50 dark:bg-black/20 hover:bg-theme-bg/80 border border-theme-border/20 rounded-full text-theme-muted hover:text-emerald-500 transition-all active:scale-95 shadow-sm"
                                     title="Paylaş"
                                 >
-                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+                                    <svg className="w-3.5 h-3.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
                                 </button>
                             </div>
                         </div>
@@ -253,7 +267,7 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
             <PrayerFocusMode
                 isActive={isManualFocusActive}
                 onExit={() => setIsManualFocusActive(false)}
-                currentPrayer={nextPrayer?.name}
+                currentPrayer={activeContextPrayer?.name}
                 suggestion={suggestion || undefined}
             />
 
@@ -266,7 +280,7 @@ export function PrayerTimesCard({ onNavigate }: PrayerTimesCardProps) {
                 isMuted={isMuted}
                 content={reminderContent}
                 currentTime={currentTime}
-                prayerName={nextPrayer?.name}
+                prayerName={activeContextPrayer?.name}
             />
         </div>
     );

@@ -17,6 +17,8 @@ import { QiblaCompass } from './components/spiritual/QiblaCompass';
 import { EsmaulHusnaView } from './components/spiritual/EsmaulHusnaView';
 import { MosqueFinder } from './components/spiritual/MosqueFinder';
 import { PrayerDebtTracker } from './components/spiritual/PrayerDebtTracker';
+import { ReligiousDaysView } from './components/spiritual/ReligiousDaysView';
+import { ReligiousDayAlert } from './components/spiritual/ReligiousDayAlert';
 
 const queryClient = new QueryClient();
 
@@ -30,6 +32,7 @@ function AppContent() {
     const [showEsmaulHusna, setShowEsmaulHusna] = useState(false);
     const [showMosqueFinder, setShowMosqueFinder] = useState(false);
     const [showPrayerDebt, setShowPrayerDebt] = useState(false);
+    const [showReligiousDays, setShowReligiousDays] = useState(false);
 
     const { isMobile } = useResponsive();
 
@@ -226,6 +229,7 @@ function AppContent() {
                         <div className="mt-8 md:mt-20 px-4 max-w-5xl mx-auto">
                             {/* Dashboard Prayer Times */}
                             <div className="mb-12 max-w-2xl mx-auto">
+                                <ReligiousDayAlert onClick={() => setShowReligiousDays(true)} />
                                 <PrayerTimesCard onNavigate={handleSearch} />
                             </div>
 
@@ -324,6 +328,7 @@ function AppContent() {
                 onOpenEsmaulHusna={() => { setIsMenuOpen(false); setShowEsmaulHusna(true); }}
                 onOpenMosqueFinder={() => { setIsMenuOpen(false); setShowMosqueFinder(true); }}
                 onOpenPrayerDebt={() => { setIsMenuOpen(false); setShowPrayerDebt(true); }}
+                onOpenReligiousDays={() => { setIsMenuOpen(false); setShowReligiousDays(true); }}
             />
 
             {/* Qibla Compass Overlay */}
@@ -344,6 +349,11 @@ function AppContent() {
             {/* Prayer Debt Tracker Overlay */}
             {showPrayerDebt && (
                 <PrayerDebtTracker onClose={() => setShowPrayerDebt(false)} />
+            )}
+
+            {/* Religious Days Overlay */}
+            {showReligiousDays && (
+                <ReligiousDaysView onClose={() => setShowReligiousDays(false)} />
             )}
         </div>
     );

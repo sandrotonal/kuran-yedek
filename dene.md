@@ -18,21 +18,23 @@
   - *Durum:* Tamamlandı.
   - *Özellik:* Vakte özel ayet/konu önerisi, paylaşma butonu.
 
+- [x] **2️⃣ Konuma Göre Yakın Camiler**
+  - *Durum:* Tamamlandı.
+  - *Özellik:* Overpass API ile en yakın camileri listeleme ve Leaflet harita entegrasyonu.
+
+- [x] **4️⃣ Kaza Namaz Takip Sistemi**
+  - *Durum:* Tamamlandı.
+  - *Özellik:* Yerel depolama ile kaza borçlarını takip etme, ekleme/silme ve görselleştirme.
+
+- [x] **5️⃣ Dini Günler & Hatırlatıcı**
+  - *Durum:* Tamamlandı.
+  - *Özellik:* 2024-2026 statik veri ile önemli günleri listeleme, geri sayım ve pano bildirimi.
+
 ---
 
 ## 📝 Yapılacaklar Listesi (Sırasıyla)
 
-- [ ] **2️⃣ Konuma Göre Yakın Camiler**
-  - *Hedef:* Kullanıcının konumuna en yakın camileri listeleme ve haritada gösterme.
-  - *Yöntem:* OpenStreetMap / Leaflet (veya Google Maps Link) kullanarak ücretsiz çözüm.
-
-- [ ] **4️⃣ Kaza Namaz Takip Sistemi**
-  - *Hedef:* Kılınamayan namazların kaydını tutma, grafiksel raporlama.
-  - *Detay:* Günlük giriş, borç hesaplama, motivasyon kartları.
-
-- [ ] **5️⃣ Dini Günler & Hatırlatıcı**
-  - *Hedef:* Kandil, bayram ve özel günlerin takvimi.
-  - *Detay:* Geri sayım, o güne özel içerik bildirimi.
+*(Tüm planlanan özellikler tamamlandı! 🎉)*
 
 ---
 

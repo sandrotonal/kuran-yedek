@@ -97,15 +97,8 @@ function AppContent() {
 
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        {/* Header Logo */}
-                                        <Logo className="w-8 h-8 text-emerald-600 dark:text-emerald-500 drop-shadow-sm" />
-                                        <h1 className="text-xl md:text-2xl font-bold tracking-wide font-arabic text-theme-text">
-                                            Kur'an Anlam Haritası
-                                        </h1>
+                                        {/* Logo Removed as per request */}
                                     </div>
-                                    <p className="text-theme-muted text-[10px] md:text-xs mt-0.5 hidden sm:block font-medium opacity-80 pl-1">
-                                        Ayetler Arası Anlamsal Bağlantılar
-                                    </p>
                                 </div>
                             </div>
 

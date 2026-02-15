@@ -12,8 +12,17 @@ export function PrayerFocusMode({ isActive, onExit, currentPrayer, suggestion }:
 
     useEffect(() => {
         if (!isActive) return;
+
+        // Lock body scroll
+        document.body.style.overflow = 'hidden';
+
         const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-        return () => clearInterval(timer);
+
+        return () => {
+            clearInterval(timer);
+            // Restore body scroll
+            document.body.style.overflow = 'unset';
+        };
     }, [isActive]);
 
     if (!isActive) return null;

@@ -56,6 +56,8 @@ body {
   min-width: 320px;
   min-height: 100vh;
   overflow-x: hidden;
+  /* scrollbar-gutter: stable → overlay açılınca scrollbar yeri ayırtılır, layout shift olmaz */
+  scrollbar-gutter: stable;
   background-color: #f8fafc;
   /* Light mode bg fallback */
 }

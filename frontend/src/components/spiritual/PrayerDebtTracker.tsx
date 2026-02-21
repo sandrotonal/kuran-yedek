@@ -27,201 +27,243 @@ export function PrayerDebtTracker({ onClose }: PrayerDebtTrackerProps) {
         const newDebts = PrayerDebtService.updateDebt(type, delta);
         setDebts(newDebts);
         if (navigator.vibrate) navigator.vibrate(10);
-
         if (delta < 0) {
-            setShowMotivation("Allah kabul etsin");
+            setShowMotivation('Allah kabul etsin 🤲');
             setTimeout(() => setShowMotivation(null), 2500);
         }
     };
 
-    // Calculate Total Debt
     const getTotalDebt = () => debts.reduce((acc, curr) => acc + curr.count, 0);
-
-    // Calculate Progress
-    const getProgressPercentage = () => {
-        // This is a visual approximation since we don't store initial debt
-        // We'll make it feel "alive" by inversing the debt count against a "Standard Kaza Cap" (e.g. 2 years)
-        // just for the visual effect if real data missing.
-        // OR better: Just show a "Goal to 0" bar that is always full? No, that's confusing.
-        // Let's hide the "%" if strictly 0 data, BUT user asked for "%18 Tamamlandı".
-        // Let's simulate: (Start - Current) / Start. 
-        // We can't know Start. 
-        // Alternative: Show "Daily Target Progress" in the bar? No.
-        // Let's use a placeholder visual that looks good: 
-        // "Kalan" focus. The bar can be "inverse log" of debt to show scale? 
-        // Let's stick to "Tahmini Bitiş" as the main metric and keep the bar decorative/pulsing.
-        return 20; // Static aesthetic for now as we lack "Initial Debt" data
-    };
 
     const getEstimatedFinishTime = () => {
         const total = getTotalDebt();
-        if (total === 0) return "Borç Yok";
-
+        if (total === 0) return 'Borç Yok';
         const prayersPerDay = dailyTarget * 6;
         const daysLeft = Math.ceil(total / prayersPerDay);
-
         const years = Math.floor(daysLeft / 365);
         const remainingDaysAfterYears = daysLeft % 365;
         const months = Math.floor(remainingDaysAfterYears / 30);
         const days = remainingDaysAfterYears % 30;
-
         const parts = [];
         if (years > 0) parts.push(`${years} Yıl`);
         if (months > 0) parts.push(`${months} Ay`);
         if (days > 0) parts.push(`${days} Gün`);
-
-        return parts.length > 0 ? parts.join(' ') : "Bugün";
+        return parts.length > 0 ? parts.join(' ') : 'Bugün';
     };
 
-    return (
-        <div className={`fixed inset-0 z-[60] bg-[#0F172A] text-slate-200 flex flex-col font-sans select-none overflow-hidden transition-opacity duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+    const totalDebt = getTotalDebt();
 
-            {/* Top Notification */}
+    return (
+        <div className={`fixed inset-0 z-[60] bg-[#0D1526] flex flex-col font-sans select-none overflow-hidden transition-opacity duration-500 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+
+            {/* ─── Motivation Toast ─── */}
             {showMotivation && (
                 <div className="fixed top-6 left-0 right-0 z-[90] pointer-events-none flex justify-center animate-slideDown">
-                    <div
-                        className="bg-[#111827]/90 backdrop-blur-xl text-emerald-400 px-8 py-3 rounded-2xl shadow-2xl shadow-emerald-900/20 border border-emerald-500/20 font-medium tracking-wide text-sm transform transition-all duration-500 flex items-center gap-3"
-                    >
-                        <CheckCircle2 className="w-5 h-5" />
+                    <div className="bg-[#141f35]/95 backdrop-blur-xl text-emerald-400 px-6 py-3 rounded-2xl shadow-2xl shadow-emerald-900/30 border border-emerald-500/20 font-semibold text-sm flex items-center gap-2.5">
+                        <CheckCircle2 className="w-4.5 h-4.5 text-emerald-400" />
                         <span>{showMotivation}</span>
                     </div>
                 </div>
             )}
 
-            {/* Header */}
-            <div className="px-6 py-4 flex items-center justify-between z-20 shrink-0">
+            {/* Ambient glow blobs */}
+            <div className="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-emerald-500/[0.07] rounded-full blur-[80px]" />
+            <div className="pointer-events-none fixed bottom-20 right-0 w-48 h-48 bg-emerald-500/[0.05] rounded-full blur-[60px]" />
+
+            {/* ─── Header ─── */}
+            <div className="relative px-5 pt-5 pb-4 flex items-center justify-between shrink-0 z-10">
                 <button
                     onClick={onClose}
-                    className="p-2 -ml-2 rounded-full text-slate-400 hover:text-white hover:bg-white/5 transition-colors"
+                    className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.07] text-slate-400 hover:text-emerald-400 hover:border-emerald-500/30 transition-all active:scale-95"
                 >
-                    <ChevronLeft className="w-6 h-6" />
+                    <ChevronLeft className="w-5 h-5" />
                 </button>
-                <div className="text-sm font-medium tracking-widest uppercase text-slate-500">Kaza Takip</div>
-                <div className="w-8"></div> {/* Spacer */}
+
+                <div className="text-center">
+                    <p className="text-[9px] font-black text-emerald-500/70 uppercase tracking-[0.3em]">İbadet</p>
+                    <h2 className="text-sm font-bold text-white/80 tracking-widest uppercase">Kaza Takip</h2>
+                </div>
+
+                <div className="w-9" />
             </div>
 
-            {/* Scrollable Content */}
-            <div className="flex-1 overflow-y-auto px-6 pb-20 custom-scrollbar">
+            {/* ─── Scrollable ─── */}
+            <div className="flex-1 overflow-y-auto px-5 pb-20 custom-scrollbar space-y-4">
 
-                {/* HERO CARD */}
-                <div className="relative overflow-hidden bg-[#1E293B]/50 backdrop-blur-md border border-white/5 rounded-3xl p-8 mb-8 text-center group">
-                    {/* Background Chart Effect */}
-                    <div className="absolute inset-0 opacity-10 pointer-events-none text-emerald-500 transform translate-y-4  scale-x-150">
+                {/* HERO COUNTER */}
+                <div className="relative overflow-hidden bg-[#141f35] border border-white/[0.06] rounded-3xl p-7 text-center">
+                    {/* BG chart */}
+                    <div className="absolute inset-0 opacity-[0.08] pointer-events-none text-emerald-500 translate-y-4 scale-x-150">
                         <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-full">
                             <path d="M0 40 Q 20 35, 40 20 T 100 5 V 40 H 0 Z" fill="currentColor" />
                             <path d="M0 40 Q 20 35, 40 20 T 100 5" fill="none" stroke="currentColor" strokeWidth="0.5" />
                         </svg>
                     </div>
 
+                    {/* Shimmering ring around counter */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-36 h-36 rounded-full border border-emerald-500/10 animate-pulse" />
+                        <div className="absolute w-28 h-28 rounded-full border border-emerald-500/[0.07]" style={{ animationDelay: '0.5s' }} />
+                    </div>
+
                     <div className="relative z-10">
-                        {/* Big Counter */}
-                        <div className="mb-2">
-                            <span className="text-6xl sm:text-7xl font-light tracking-tighter text-white font-mono">
-                                {getTotalDebt().toLocaleString()}
+                        <div className="mb-1">
+                            <span className={`font-light tracking-tighter text-white font-mono ${totalDebt >= 1000 ? 'text-5xl' : 'text-7xl'}`}>
+                                {totalDebt.toLocaleString()}
                             </span>
                         </div>
-                        <div className="text-xs font-bold uppercase tracking-[0.3em] text-slate-500 mb-6">
+                        <div className="text-[10px] font-black uppercase tracking-[0.35em] text-slate-500 mb-5">
                             Vakit Borç
                         </div>
 
-                        {/* Progress Bar (Decorative/Motivational) */}
-                        <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden mb-4 relative">
+                        {/* Progress bar */}
+                        <div className="w-full h-1.5 bg-white/[0.06] rounded-full overflow-hidden mb-4 mx-auto max-w-[220px]">
                             <div
-                                className="absolute inset-0 bg-gradient-to-r from-emerald-600 to-blue-600 animate-pulse rounded-full opacity-70 transition-all duration-1000"
-                                style={{ width: `${getProgressPercentage()}%` }}
-                            ></div>
+                                className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full animate-pulse"
+                                style={{ width: totalDebt === 0 ? '100%' : '20%', transition: 'width 1s ease-out' }}
+                            />
                         </div>
 
-                        {/* Subtext */}
-                        <div className="flex items-center justify-center gap-2 text-sm text-slate-400">
+                        <div className="flex items-center justify-center gap-2 text-sm">
                             <TrendingDown className="w-4 h-4 text-emerald-500" />
-                            <span>Tahmini Bitiş:</span>
-                            <span className="text-emerald-400 font-medium">{getEstimatedFinishTime()}</span>
+                            <span className="text-slate-400">Tahmini Bitiş:</span>
+                            <span className="text-emerald-400 font-bold">{getEstimatedFinishTime()}</span>
                         </div>
+
+                        {totalDebt === 0 && (
+                            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-sm font-semibold">
+                                <CheckCircle2 className="w-4 h-4" />
+                                Tüm Borçlar Temizlendi!
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* DAILY TARGET CONTROL */}
-                <div className="flex justify-center mb-10 animate-slideUp" style={{ animationDelay: '0.1s' }}>
-                    <div className="flex items-center bg-[#1E293B] rounded-full p-1.5 border border-white/5 shadow-xl shadow-black/20">
+                {/* DAILY TARGET */}
+                <div className="flex justify-center">
+                    <div className="relative overflow-hidden flex items-center gap-1 bg-[#141f35] border border-white/[0.07] rounded-2xl p-1.5 shadow-xl">
+                        {/* Shimmer */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/[0.04] to-transparent -translate-x-full animate-[shimmer_3s_infinite] pointer-events-none rounded-2xl" />
+
                         <button
                             onClick={() => setDailyTarget(Math.max(1, dailyTarget - 1))}
-                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/5 transition-all active:scale-95"
+                            className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-90"
                         >
-                            <Minus className="w-5 h-5" />
+                            <Minus className="w-4 h-4" />
                         </button>
 
-                        <div className="px-6 flex flex-col items-center min-w-[120px]">
-                            <span className="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Günlük Hedef</span>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-xl font-bold text-white">{dailyTarget}</span>
+                        <div className="px-5 flex flex-col items-center min-w-[130px]">
+                            <span className="text-[9px] uppercase tracking-[0.25em] text-slate-500 font-black">Günlük Hedef</span>
+                            <div className="flex items-baseline gap-1 mt-0.5">
+                                <span className="text-2xl font-bold text-white">{dailyTarget}</span>
                                 <span className="text-xs text-slate-400">Vakit</span>
                             </div>
                         </div>
 
                         <button
                             onClick={() => setDailyTarget(dailyTarget + 1)}
-                            className="w-10 h-10 flex items-center justify-center rounded-full text-slate-400 hover:text-white hover:bg-white/5 transition-all active:scale-95"
+                            className="w-10 h-10 flex items-center justify-center rounded-xl text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/10 transition-all active:scale-90"
                         >
-                            <Plus className="w-5 h-5" />
+                            <Plus className="w-4 h-4" />
                         </button>
                     </div>
                 </div>
 
-                {/* LIST VIEW */}
-                <div className="space-y-4">
+                {/* PRAYER LIST */}
+                <div className="space-y-2.5">
+                    {/* Section label */}
+                    <div className="flex items-center gap-2 px-1">
+                        <span className="w-4 h-px bg-gradient-to-r from-transparent to-emerald-400/50" />
+                        <p className="text-[9px] font-black text-emerald-500/70 uppercase tracking-[0.25em]">Namaz Vakitleri</p>
+                        <span className="flex-1 h-px bg-gradient-to-r from-emerald-400/20 to-transparent" />
+                    </div>
+
                     {debts.map((debt, index) => {
-                        // Mock completion percentage for visual flare since we don't have "max"
-                        // We'll base it on arbitrary max of 1000 for visual demo or just a random static
-                        // Better: 100% - (debt.count % 100) to make it look active?
-                        // Let's simplify: Just a ring that pulses.
                         const isZero = debt.count === 0;
 
                         return (
                             <div
                                 key={debt.type}
-                                className={`group flex items-center justify-between p-4 rounded-2xl bg-[#111827] border ${isZero ? 'border-emerald-500/30 bg-emerald-900/10' : 'border-white/5 hover:border-white/10'} transition-all duration-300 animate-slideUp`}
-                                style={{ animationDelay: `${0.15 + (index * 0.05)}s` }}
+                                className={`group relative flex items-center gap-3.5 px-4 py-3.5 rounded-2xl border overflow-hidden transition-all duration-300
+                                    ${isZero
+                                        ? 'bg-emerald-500/[0.06] border-emerald-500/20'
+                                        : 'bg-[#141f35] border-white/[0.05] hover:border-white/[0.10]'
+                                    }`}
+                                style={{ animationDelay: `${0.1 + index * 0.05}s` }}
                             >
-                                <div className="flex items-center gap-4">
-                                    {/* Icon / Indicator */}
-                                    <div className={`w-10 h-10 rounded-full flex items-center justify-center border ${isZero ? 'border-emerald-500/50 text-emerald-400' : 'border-slate-700 text-slate-500'}`}>
-                                        {isZero ? <CheckCircle2 className="w-5 h-5" /> : <Circle className="w-5 h-5" />}
-                                    </div>
+                                {/* Ambient wash */}
+                                {!isZero && (
+                                    <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 to-emerald-400/0 group-hover:from-emerald-500/[0.03] group-hover:to-transparent transition-all duration-400 pointer-events-none rounded-2xl" />
+                                )}
 
-                                    <div>
-                                        <div className={`text-base font-medium ${isZero ? 'text-emerald-400' : 'text-slate-200'} capitalize`}>
-                                            {PrayerDebtService.getLabel(debt.type)}
-                                        </div>
-                                        <div className="text-xs text-slate-500">
-                                            {isZero ? 'Tamamlandı' : `${debt.count} borç`}
-                                        </div>
+                                {/* Arabic watermark */}
+                                <div
+                                    dir="rtl"
+                                    className="absolute right-14 top-1/2 -translate-y-1/2 font-arabic leading-none select-none pointer-events-none
+                                        text-[3rem] text-white/[0.03] group-hover:text-emerald-400/[0.08]
+                                        transition-all duration-500 ease-out"
+                                >
+                                    صلاة
+                                </div>
+
+                                {/* Status icon */}
+                                <div className={`relative z-10 w-10 h-10 rounded-full flex items-center justify-center border shrink-0 transition-all duration-300
+                                    ${isZero
+                                        ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400'
+                                        : 'border-slate-700 text-slate-600 group-hover:border-slate-600'
+                                    }`}>
+                                    {isZero
+                                        ? <CheckCircle2 className="w-5 h-5" />
+                                        : <Circle className="w-5 h-5" />
+                                    }
+                                </div>
+
+                                {/* Label */}
+                                <div className="relative z-10 flex-1 min-w-0">
+                                    <div className={`text-[15px] font-bold leading-tight capitalize
+                                        ${isZero ? 'text-emerald-400' : 'text-white'}`}>
+                                        {PrayerDebtService.getLabel(debt.type)}
+                                    </div>
+                                    <div className="text-[11px] text-slate-500 mt-0.5">
+                                        {isZero ? 'Tamamlandı ✓' : `${debt.count} borç`}
                                     </div>
                                 </div>
 
                                 {/* Controls */}
-                                {!isZero && (
-                                    <div className="flex items-center gap-3">
-                                        <button
-                                            onClick={() => handleUpdate(debt.type, -1)}
-                                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500 hover:text-white transition-colors"
-                                        >
-                                            <Minus className="w-4 h-4" />
-                                        </button>
-                                        <span className="font-mono text-lg w-12 text-center text-slate-200">{debt.count}</span>
-                                        <button
-                                            onClick={() => handleUpdate(debt.type, 1)}
-                                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-slate-800 text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
-                                        >
-                                            <Plus className="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                )}
+                                <div className="relative z-10 flex items-center gap-2 shrink-0">
+                                    <button
+                                        onClick={() => handleUpdate(debt.type, -1)}
+                                        disabled={isZero}
+                                        className={`w-9 h-9 flex items-center justify-center rounded-xl transition-all active:scale-90
+                                            ${isZero
+                                                ? 'bg-white/[0.03] text-slate-700 cursor-not-allowed'
+                                                : 'bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500 hover:text-white border border-emerald-500/20 hover:border-emerald-500 hover:shadow-md hover:shadow-emerald-500/20'
+                                            }`}
+                                    >
+                                        <Minus className="w-3.5 h-3.5" />
+                                    </button>
+
+                                    <span className={`font-mono text-lg font-bold w-10 text-center
+                                        ${isZero ? 'text-emerald-400/60' : 'text-white'}`}>
+                                        {debt.count}
+                                    </span>
+
+                                    <button
+                                        onClick={() => handleUpdate(debt.type, 1)}
+                                        className="w-9 h-9 flex items-center justify-center rounded-xl bg-white/[0.05] border border-white/[0.07] text-slate-400 hover:text-white hover:bg-white/[0.10] hover:border-white/[0.15] transition-all active:scale-90"
+                                    >
+                                        <Plus className="w-3.5 h-3.5" />
+                                    </button>
+                                </div>
                             </div>
                         );
                     })}
                 </div>
 
+                {/* Footer tagline */}
+                <div className="text-center pt-2 pb-4">
+                    <p className="text-[10px] text-slate-600 font-medium tracking-wider">✦ Her namaz bir adım ✦</p>
+                </div>
             </div>
         </div>
     );

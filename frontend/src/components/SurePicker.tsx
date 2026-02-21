@@ -30,72 +30,84 @@ export function SurePicker({ isOpen, onClose, onSelect }: SurePickerProps) {
         <>
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 animate-fadeIn"
+                className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 animate-fadeIn"
                 onClick={onClose}
             />
 
             {/* Bottom Sheet */}
             <div className="fixed inset-x-0 bottom-0 z-50 animate-slideUp">
-                <div className="bg-white dark:bg-slate-800 rounded-t-3xl shadow-2xl max-h-[80vh] flex flex-col">
+                <div className="bg-white dark:bg-[#0D1526] rounded-t-[2rem] shadow-2xl border-t border-slate-100 dark:border-white/[0.07] max-h-[82vh] flex flex-col overflow-hidden">
+
                     {/* Handle */}
-                    <div className="flex justify-center pt-3 pb-2">
-                        <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-600 rounded-full"></div>
+                    <div className="flex justify-center pt-3 pb-1 shrink-0">
+                        <div className="w-10 h-1 bg-slate-200 dark:bg-white/20 rounded-full"></div>
                     </div>
 
                     {/* Header */}
-                    <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    <div className="px-6 pt-3 pb-4 shrink-0">
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
                             Sure Seç
                         </h3>
 
                         {/* Search Input */}
-                        <input
-                            type="text"
-                            placeholder="Sure ara... (örn: Bakara)"
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                            className="w-full px-4 py-3 bg-gray-100 dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-gray-900 dark:text-white"
-                            autoFocus
-                        />
+                        <div className="relative">
+                            <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <input
+                                type="text"
+                                placeholder="Sure ara... (örn: Bakara)"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                className="w-full pl-10 pr-4 py-3 bg-slate-50 dark:bg-white/[0.05] border border-slate-200 dark:border-white/[0.08] rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-400 dark:focus:border-emerald-500/50 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-600 text-sm transition-all duration-200"
+                                autoFocus
+                            />
+                        </div>
                     </div>
 
+                    {/* Divider */}
+                    <div className="h-px bg-slate-100 dark:bg-white/[0.06] shrink-0"></div>
+
                     {/* Surah List */}
-                    <div className="overflow-y-auto flex-1 px-6 py-2">
+                    <div className="overflow-y-auto flex-1 px-4 py-3 space-y-1.5">
                         {filteredSurahs.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                                <p className="text-lg">😔 Sure bulunamadı</p>
-                                <p className="text-sm mt-2">Farklı bir arama deneyin</p>
+                            <div className="text-center py-16 text-slate-400 dark:text-slate-500">
+                                <p className="text-4xl mb-3">😔</p>
+                                <p className="font-semibold text-slate-600 dark:text-slate-400">Sure bulunamadı</p>
+                                <p className="text-sm mt-1">Farklı bir arama deneyin</p>
                             </div>
                         ) : (
-                            <div className="space-y-2">
-                                {filteredSurahs.map((surah) => (
-                                    <button
-                                        key={surah.id}
-                                        onClick={() => handleSelect(surah.id)}
-                                        className="w-full flex items-center justify-between p-4 bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-900/20 dark:to-teal-900/20 hover:from-emerald-100 hover:to-teal-100 dark:hover:from-emerald-800/30 dark:hover:to-teal-800/30 rounded-xl border border-emerald-200/50 dark:border-emerald-700/50 transition-all active:scale-[0.98]"
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <div className="flex items-center justify-center w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-500 text-white rounded-lg font-bold text-sm">
-                                                {surah.id}
+                            filteredSurahs.map((surah) => (
+                                <button
+                                    key={surah.id}
+                                    onClick={() => handleSelect(surah.id)}
+                                    className="w-full flex items-center justify-between p-3.5 rounded-2xl
+                                        bg-slate-50 dark:bg-[#141f35]
+                                        border border-slate-100 dark:border-white/[0.05]
+                                        hover:bg-emerald-50 dark:hover:bg-emerald-500/10
+                                        hover:border-emerald-200 dark:hover:border-emerald-500/20
+                                        active:scale-[0.98]
+                                        transition-all duration-200 group"
+                                >
+                                    <div className="flex items-center gap-3.5">
+                                        {/* Number Badge */}
+                                        <div className="flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white font-bold text-sm shadow-md shadow-emerald-500/20 shrink-0 group-hover:scale-105 transition-transform duration-200">
+                                            {surah.id}
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-semibold text-slate-900 dark:text-white text-[15px] leading-tight group-hover:text-emerald-700 dark:group-hover:text-emerald-400 transition-colors duration-200">
+                                                {surah.turkish}
                                             </div>
-                                            <div className="text-left">
-                                                <div className="font-semibold text-gray-900 dark:text-white">
-                                                    {surah.turkish}
-                                                </div>
-                                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                    {surah.ayetCount} ayet
-                                                </div>
+                                            <div className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5 font-medium">
+                                                {surah.ayetCount} ayet
                                             </div>
                                         </div>
-                                        <div
-                                            className="text-lg font-arabic text-emerald-700 dark:text-emerald-400"
-                                            dir="rtl"
-                                        >
-                                            {surah.arabic}
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
+                                    </div>
+                                    <div className="text-base font-arabic text-emerald-600 dark:text-emerald-400 opacity-70 group-hover:opacity-100 transition-opacity duration-200" dir="rtl">
+                                        {surah.arabic}
+                                    </div>
+                                </button>
+                            ))
                         )}
                     </div>
                 </div>

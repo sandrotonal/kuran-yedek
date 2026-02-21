@@ -16,7 +16,6 @@ export function MobileAyetSelector({ onSearch, isLoading, activeSure, activeAyet
     const [showSurePicker, setShowSurePicker] = useState(false);
     const [showAyetPicker, setShowAyetPicker] = useState(false);
 
-    // Sync state with props
     useEffect(() => {
         if (activeSure) setSelectedSure(activeSure);
         if (activeAyet) setSelectedAyet(activeAyet);
@@ -27,15 +26,15 @@ export function MobileAyetSelector({ onSearch, isLoading, activeSure, activeAyet
     const handleSureSelect = (sureId: number) => {
         hapticFeedback(10);
         setSelectedSure(sureId);
-        setSelectedAyet(1); // Reset ayet
-        setShowSurePicker(false); // Auto close
+        setSelectedAyet(1);
+        setShowSurePicker(false);
         setTimeout(() => setShowAyetPicker(true), 250);
     };
 
     const handleAyetSelect = (ayetNo: number) => {
         hapticFeedback(10);
         setSelectedAyet(ayetNo);
-        setShowAyetPicker(false); // Auto close
+        setShowAyetPicker(false);
     };
 
     const handleSearch = () => {
@@ -45,79 +44,70 @@ export function MobileAyetSelector({ onSearch, isLoading, activeSure, activeAyet
 
     return (
         <div className="mb-6 relative z-30 mx-3">
-            {/* Elegant Glass Container */}
-            <div className="bg-theme-surface/80 backdrop-blur-md rounded-2xl shadow-lg border border-theme-border/50 overflow-hidden transition-all duration-300">
+            {/* Card container */}
+            <div className="relative overflow-hidden rounded-2xl bg-white dark:bg-[#0D1526] border border-slate-100 dark:border-white/[0.07] shadow-xl transition-colors duration-300">
 
-                {/* Compact Row Layout */}
-                <div className="flex flex-col">
+                {/* Subtle ambient glow */}
+                <div className="pointer-events-none absolute -top-10 -right-10 w-40 h-40 bg-emerald-400/10 dark:bg-emerald-500/[0.06] rounded-full blur-[50px]"></div>
 
-                    {/* Top Row: Selectors */}
-                    <div className="flex divide-x divide-theme-border/30 h-16">
-                        {/* Sure Selector (Wider) */}
-                        <button
-                            onClick={() => {
-                                hapticFeedback(10);
-                                setShowSurePicker(true);
-                            }}
-                            disabled={isLoading}
-                            className="flex-1 flex flex-col justify-center px-5 hover:bg-theme-bg/50 active:bg-theme-bg/80 transition-colors text-left"
-                        >
-                            <span className="text-[10px] font-bold tracking-widest text-accent uppercase mb-0.5">Sure</span>
-                            <div className="flex items-baseline gap-2 truncate">
-                                <span className="text-lg font-bold text-theme-text font-serif">{selectedSure}.</span>
-                                <span className="text-base font-medium text-theme-text/90 truncate">{selectedSurah?.turkish}</span>
-                            </div>
-                        </button>
-
-                        {/* Ayet Selector (Narrower) */}
-                        <button
-                            onClick={() => {
-                                hapticFeedback(10);
-                                setShowAyetPicker(true);
-                            }}
-                            disabled={isLoading}
-                            className="w-24 flex flex-col justify-center px-4 hover:bg-theme-bg/50 active:bg-theme-bg/80 transition-colors text-center border-l border-theme-border/30"
-                        >
-                            <span className="text-[10px] font-bold tracking-widest text-accent uppercase mb-0.5">Ayet</span>
-                            <span className="text-xl font-bold text-theme-text font-serif">{selectedAyet}</span>
-                        </button>
-                    </div>
-
-                    {/* Bottom Row: Action Button - Refined Outline Style */}
+                {/* Top row: Selectors */}
+                <div className="flex h-[4.25rem]">
+                    {/* Sure Selector */}
                     <button
-                        onClick={handleSearch}
+                        onClick={() => { hapticFeedback(10); setShowSurePicker(true); }}
                         disabled={isLoading}
-                        className="h-12 w-full relative overflow-hidden bg-transparent hover:bg-accent/5 border-t border-theme-border/30 flex items-center justify-center gap-2.5 transition-all duration-300 group"
+                        className="flex-1 flex flex-col justify-center px-5 hover:bg-slate-50 dark:hover:bg-white/[0.03] active:bg-slate-100 dark:active:bg-white/5 transition-colors duration-150 text-left group"
                     >
-                        {isLoading ? (
-                            <div className="flex items-center gap-2">
-                                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce"></span>
-                                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:-0.15s]"></span>
-                                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-bounce [animation-delay:-0.3s]"></span>
-                            </div>
-                        ) : (
-                            <>
-                                <span className="text-xs font-bold text-accent group-hover:tracking-[0.2em] transition-all duration-300 uppercase tracking-widest font-serif relative z-10">KEŞFET & OKU</span>
-                                <svg
-                                    className="w-4 h-4 text-accent/70 group-hover:translate-x-1 transition-all duration-300 relative z-10"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                                </svg>
-
-                                {/* Subtle Hover Shine Effect */}
-                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out" />
-                            </>
-                        )}
+                        <span className="text-[9px] font-extrabold tracking-[0.18em] text-emerald-500 dark:text-emerald-400 uppercase mb-1">SURE</span>
+                        <div className="flex items-baseline gap-2 truncate">
+                            <span className="text-[1.15rem] font-bold text-slate-900 dark:text-white font-serif leading-none">{selectedSure}.</span>
+                            <span className="text-base font-semibold text-slate-700 dark:text-slate-200 truncate leading-none group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">{selectedSurah?.turkish}</span>
+                        </div>
                     </button>
 
-                    {/* Progress/Decorative Line */}
-                    <div className="h-[1px] w-full bg-theme-border/10">
-                        <div className="h-full bg-accent/30 w-0 group-hover:w-full transition-all duration-700 ease-out"></div>
-                    </div>
+                    {/* Divider */}
+                    <div className="w-px bg-slate-100 dark:bg-white/[0.06] self-stretch my-3"></div>
+
+                    {/* Ayet Selector */}
+                    <button
+                        onClick={() => { hapticFeedback(10); setShowAyetPicker(true); }}
+                        disabled={isLoading}
+                        className="w-24 flex flex-col justify-center items-center hover:bg-slate-50 dark:hover:bg-white/[0.03] active:bg-slate-100 dark:active:bg-white/5 transition-colors duration-150 group"
+                    >
+                        <span className="text-[9px] font-extrabold tracking-[0.18em] text-emerald-500 dark:text-emerald-400 uppercase mb-1">AYET</span>
+                        <span className="text-[1.35rem] font-bold text-slate-900 dark:text-white font-serif leading-none group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200">{selectedAyet}</span>
+                    </button>
                 </div>
+
+                {/* Divider */}
+                <div className="h-px bg-slate-100 dark:bg-white/[0.06]"></div>
+
+                {/* KEŞFET & OKU Button */}
+                <button
+                    onClick={handleSearch}
+                    disabled={isLoading}
+                    className="relative h-12 w-full flex items-center justify-center gap-2.5 overflow-hidden
+                        hover:bg-emerald-50 dark:hover:bg-emerald-500/[0.06]
+                        active:bg-emerald-100 dark:active:bg-emerald-500/10
+                        transition-colors duration-200 group"
+                >
+                    {isLoading ? (
+                        <div className="flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:0ms]"></span>
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:150ms]"></span>
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce [animation-delay:300ms]"></span>
+                        </div>
+                    ) : (
+                        <>
+                            <span className="text-[11px] font-black text-emerald-500 dark:text-emerald-400 uppercase tracking-[0.2em] group-hover:tracking-[0.28em] transition-all duration-300">KEŞFET & OKU</span>
+                            <svg className="w-4 h-4 text-emerald-400 group-hover:translate-x-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                            </svg>
+                            {/* Sheen sweep */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none"></div>
+                        </>
+                    )}
+                </button>
             </div>
 
             <SurePicker

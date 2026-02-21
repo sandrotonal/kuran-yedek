@@ -20,6 +20,8 @@ import { PrayerDebtTracker } from './components/spiritual/PrayerDebtTracker';
 import { ReligiousDaysView } from './components/spiritual/ReligiousDaysView';
 import { ZikirmatikView } from './components/spiritual/ZikirmatikView';
 import { ReligiousDayAlert } from './components/spiritual/ReligiousDayAlert';
+import { NotificationManager } from './components/spiritual/NotificationManager';
+import { RamadanCountdown } from './components/spiritual/RamadanCountdown';
 
 const queryClient = new QueryClient();
 
@@ -79,6 +81,9 @@ function AppContent() {
                 {/* Islamic Pattern Overlay - Subtle Texture */}
                 <div className="fixed inset-0 opacity-[0.03] pointer-events-none islamic-pattern mix-blend-overlay"></div>
 
+                {/* Notifications */}
+                <NotificationManager />
+
                 {/* Header */}
                 <header className="sticky top-0 z-40 bg-theme-bg/80 backdrop-blur-md border-b border-theme-border/50 transition-all duration-300 supports-[backdrop-filter]:bg-theme-bg/60">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5 relative">
@@ -99,7 +104,25 @@ function AppContent() {
 
                                 <div>
                                     <div className="flex items-center gap-2">
-                                        {/* Logo Removed as per request */}
+                                        {/* Dynamic Navigation Title or Logo */}
+                                        {searchParams ? (
+                                            <button
+                                                onClick={() => {
+                                                    setSearchParams(null);
+                                                    setSelectedNode(null);
+                                                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                                                }}
+                                                className="p-2 -ml-2 rounded-full text-slate-500 hover:text-theme-text hover:bg-theme-surface transition-all active:scale-90 animate-fadeIn"
+                                                aria-label="Geri Dön"
+                                            >
+                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                                            </button>
+                                        ) : (
+                                            <div className="flex items-center gap-2 px-2">
+                                                {/* Logo Removed as per request */}
+                                                <span className="text-sm font-bold tracking-wide hidden sm:inline-block">KUR'AN REHBERİ</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -225,26 +248,33 @@ function AppContent() {
                             {/* Dashboard Prayer Times */}
                             <div className="mb-12 max-w-2xl mx-auto">
                                 <ReligiousDayAlert onClick={() => setShowReligiousDays(true)} />
+                                <RamadanCountdown />
                                 <PrayerTimesCard onNavigate={handleSearch} />
                             </div>
 
-                            <div className="text-center mb-10">
-                                <h2 className="text-3xl md:text-4xl font-bold text-theme-text mb-3 font-arabic tracking-tight">
+                            <div className="mb-10 text-center relative">
+                                {/* Section heading */}
+                                <div className="inline-flex items-center gap-2 mb-3">
+                                    <span className="w-8 h-px bg-gradient-to-r from-transparent to-emerald-400/50"></span>
+                                    <p className="text-[10px] font-black text-emerald-500 dark:text-emerald-400 uppercase tracking-[0.25em]">Manevi Yolculuk</p>
+                                    <span className="w-8 h-px bg-gradient-to-l from-transparent to-emerald-400/50"></span>
+                                </div>
+                                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-3 tracking-tight">
                                     Önerilen Okumalar
                                 </h2>
-                                <p className="text-theme-muted text-sm md:text-base">
+                                <p className="text-slate-500 dark:text-slate-400 text-sm md:text-base max-w-sm mx-auto">
                                     Sık okunan surelere ve ayetlere hızlıca ulaşın
                                 </p>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
                                 {[
                                     { label: 'Fatiha Suresi', desc: 'Mekki • 7 Ayet', arabic: 'الفاتحة', action: () => handleSearch(1, 1) },
                                     { label: 'Yasin Suresi', desc: 'Mekki • 83 Ayet', arabic: 'يس', action: () => handleSearch(36, 1) },
                                     { label: 'Mülk Suresi', desc: 'Mekki • 30 Ayet', arabic: 'الملك', action: () => handleSearch(67, 1) },
                                     { label: 'Rahman Suresi', desc: 'Medine • 78 Ayet', arabic: 'الرحمن', action: () => handleSearch(55, 1) },
-                                    { label: 'Ayetel Kürsi', desc: 'Bakara Suresi • 255. Ayet', arabic: 'آية الكرسي', action: () => handleSearch(2, 255) },
-                                    { label: 'Amenerrasulü', desc: 'Bakara Suresi • Son 2 Ayet', arabic: 'آمن الرسول', action: () => handleSearch(2, 285) },
+                                    { label: 'Ayetel Kürsi', desc: 'Bakara • 255. Ayet', arabic: 'آية الكرسي', action: () => handleSearch(2, 255) },
+                                    { label: 'Amenerrasulü', desc: 'Bakara • Son 2 Ayet', arabic: 'آمن الرسول', action: () => handleSearch(2, 285) },
                                     { label: 'İhlas Suresi', desc: 'Mekki • 4 Ayet', arabic: 'الإخلاص', action: () => handleSearch(112, 1) },
                                     { label: 'Felak Suresi', desc: 'Medine • 5 Ayet', arabic: 'الفلق', action: () => handleSearch(113, 1) },
                                     { label: 'Nas Suresi', desc: 'Medine • 6 Ayet', arabic: 'الناس', action: () => handleSearch(114, 1) },
@@ -252,26 +282,52 @@ function AppContent() {
                                     <button
                                         key={index}
                                         onClick={item.action}
-                                        className="group relative flex flex-col items-start p-6 md:p-8 rounded-[2rem] bg-theme-surface border border-theme-border/40 hover:border-accent/40 hover:bg-theme-surface/90 transition-all duration-300 backdrop-blur-sm text-left hover:scale-[1.02] hover:shadow-lg hover:shadow-accent/5 overflow-hidden ring-1 ring-white/5"
+                                        className="group relative flex flex-col items-start p-5 md:p-6 rounded-[1.5rem]
+                                            bg-white dark:bg-[#141f35]
+                                            border border-slate-100 dark:border-white/[0.06]
+                                            hover:border-emerald-200 dark:hover:border-emerald-500/30
+                                            hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-900/30
+                                            text-left overflow-hidden active:scale-[0.98]"
+                                        style={{ transition: 'transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.35s, border-color 0.25s' }}
                                     >
-                                        <div className="absolute top-0 right-0 p-6 opacity-[0.04] group-hover:opacity-10 transition-opacity">
-                                            <span className="text-7xl font-arabic text-theme-text">{item.arabic}</span>
+                                        {/* Ambient emerald glow behind arabic — shown on hover */}
+                                        <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/0 via-emerald-500/0 to-emerald-500/0 group-hover:from-emerald-500/[0.04] group-hover:to-emerald-400/[0.04] transition-all duration-500 pointer-events-none" />
+
+                                        {/* Arabic watermark — grows & brightens on hover */}
+                                        <div
+                                            dir="rtl"
+                                            className="absolute -bottom-2 right-1 font-arabic leading-none select-none pointer-events-none
+                                                text-[5rem] text-slate-200/60 dark:text-emerald-400/[0.07]
+                                                group-hover:text-emerald-400/30 dark:group-hover:text-emerald-400/25
+                                                group-hover:scale-110 group-hover:-translate-y-1
+                                                transition-all duration-500 ease-out"
+                                        >
+                                            {item.arabic}
                                         </div>
 
-                                        <div className="relative z-10 w-full">
-                                            <div className="w-12 h-12 mb-5 rounded-2xl bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400 group-hover:scale-110 transition-transform duration-500">
-                                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
-                                                </svg>
-                                            </div>
+                                        {/* Shimmer sweep */}
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-emerald-500/[0.06] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none" />
 
-                                            <h3 className="text-xl font-bold text-theme-text group-hover:text-emerald-500 transition-colors mb-2">
-                                                {item.label}
-                                            </h3>
-                                            <p className="text-sm font-medium text-theme-muted uppercase tracking-wider opacity-90">
-                                                {item.desc}
-                                            </p>
+                                        {/* Icon — always emerald */}
+                                        <div className="relative z-10 w-11 h-11 mb-4 rounded-2xl
+                                            bg-emerald-50 dark:bg-emerald-500/10
+                                            border border-emerald-100 dark:border-emerald-500/20
+                                            text-emerald-600 dark:text-emerald-400
+                                            flex items-center justify-center
+                                            group-hover:scale-110 group-hover:shadow-lg group-hover:shadow-emerald-500/20
+                                            transition-all duration-300"
+                                        >
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                                            </svg>
                                         </div>
+
+                                        <h3 className="relative z-10 text-[1rem] font-bold text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-emerald-300 mb-1.5 leading-tight transition-colors duration-200">
+                                            {item.label}
+                                        </h3>
+                                        <p className="relative z-10 text-[11px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+                                            {item.desc}
+                                        </p>
                                     </button>
                                 ))}
                             </div>

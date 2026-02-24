@@ -1,3 +1,5 @@
+Bismillahirahmanirahim
+
 # Quran Semantic Graph & Spiritual Compass
 
 Modern NLP (Dogal Dil Isleme) teknikleri ve graph (ag) gorsellestirme algoritmalari kullanilarak Kur'an-i Kerim ayetleri arasindaki anlamsal iliskileri haritalandiran, aynizamanda zenginlestirilmis Islami araclar ile donatilmis full-stack web uygulamasidir.

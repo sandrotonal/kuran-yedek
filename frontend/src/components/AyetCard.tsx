@@ -66,7 +66,7 @@ export function AyetCard({
     const renderKaraokeText = () => {
         if (!segments || segments.length === 0) return arabicText;
         return (
-            <div className="flex flex-wrap flex-row-reverse gap-3 leading-[2.8] relative z-20">
+            <div className="flex flex-wrap gap-3 leading-[2.8] relative z-20">
                 {segments.map((segment: any, index: number) => {
                     const isActive = index === activeWordIndex;
                     return (

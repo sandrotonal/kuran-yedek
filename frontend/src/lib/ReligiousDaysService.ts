@@ -117,17 +117,105 @@ export const RELIGIOUS_DAYS: ReligiousDay[] = [
     { date: '2025-09-03', name: 'Mevlid Kandili', description: 'Alemlere rahmet Peygamberimizin doğumu.', isKandil: true, colorTheme: 'violet' },
 
     // 2026
-    { date: '2026-01-15', name: 'Miraç Kandili', description: 'Göğe yükseliş mucizesinin sene-i devriyesi.', isKandil: true, colorTheme: 'violet' },
-    { date: '2026-02-02', name: 'Berat Kandili', description: 'Af ve mağfiret kapılarının açıldığı gece.', isKandil: true, colorTheme: 'amber' },
-    { date: '2026-02-19', name: 'Ramazan Başlangıcı', description: 'Gönüllerin sultanı Ramazan ayının gelişi.', colorTheme: 'emerald' },
-    { date: '2026-03-16', name: 'Kadir Gecesi', description: 'Kur\'an\'ın kalplere indiği gece.', isKandil: true, colorTheme: 'emerald' },
-    { date: '2026-03-20', name: 'Ramazan Bayramı', description: 'Ümmetin sevinç ve kucaklaşma günü.', isHoliday: true, colorTheme: 'rose' },
-    { date: '2026-05-26', name: 'Arefe Günü', description: 'Hacılarla birlikte dua etme zamanı.', colorTheme: 'amber' },
-    { date: '2026-05-27', name: 'Kurban Bayramı', description: 'Allah\'a yakınlaşmanın sembolü kurban bayramı.', isHoliday: true, colorTheme: 'rose' },
-    { date: '2026-06-16', name: 'Hicri Yılbaşı', description: '1 Muharrem, yeni yıl.', colorTheme: 'cyan' },
-    { date: '2026-06-25', name: 'Aşure Günü', description: 'Muharrem\'in 10. günü.', colorTheme: 'amber' },
-    { date: '2026-08-24', name: 'Mevlid Kandili', description: 'En Sevgili\'nin doğum günü.', isKandil: true, colorTheme: 'violet' },
-    { date: '2026-12-10', name: 'Regaip Kandili', description: 'Manevi iklimin habercisi.', isKandil: true, colorTheme: 'cyan' },
+    {
+        date: '2026-01-15',
+        name: 'Miraç Kandili',
+        description: 'Göğe yükseliş mucizesinin sene-i devriyesi.',
+        longDescription: 'İsra ve Miraç mucizesi, Resulullah\'ın (s.a.v.) Mescid-i Haram\'dan Mescid-i Aksa\'ya, oradan da Semalara ve Sidretü\'l-Münteha\'ya yükseltildiği gecedir. Bu gece Ümmet-i Muhammed\'e üç büyük hediye verilmiştir: Beş vakit namaz, Bakara Suresi\'nin son iki ayeti (Amenerrasulü) ve şirk koşmayanların affedileceği müjdesi. Bu müstesna gece, müminin kendi miracı olan namaza sarılması ve manevi olarak yücelmesi için büyük bir fırsattır.',
+        hadith: { text: 'Namaz dinin direğidir, kim onu ikame ederse dinini ayakta tutmuş olur.', source: 'Hadis-i Şerif' },
+        worshipSuggestions: ['Miraç gecesi hususi namazı (12 rekat nafile namaz)', 'Salavat-ı Şerife okumak', 'Amenerrasulü tilaveti', 'Tevbe ve istiğfar yenilemek'],
+        isKandil: true, colorTheme: 'violet'
+    },
+    {
+        date: '2026-02-02',
+        name: 'Berat Kandili',
+        description: 'Af ve mağfiret kapılarının açıldığı gece.',
+        longDescription: 'Şaban ayının 15. gecesi olan Berat gecesi; kulların günahlarından arınması, borçlardan kurtulması ve ilahi affa mazhar olması anlamına gelir. Rivayetlere göre bu gece, bir yıllık rızıklar, eceller ve önemli olaylar meleklere teslim edilir. Allah Teala bu gece rahmet nazarıyla bakar ve bağışlanmak isteyenleri mağfiret eder.',
+        hadith: { text: 'Allah, Şaban ayının yarısı gecesinde (Berat gecesi) dünya semasına tecelli eder ve Kelb kabilesinin koyunlarının kılları sayısından daha çok kimseyi bağışlar.', source: 'Tirmizi' },
+        worshipSuggestions: ['100 rekatlık Berat Gecesi namazı veya bolca kaza namazı', 'Gündüzünü oruçlu geçirmek', 'Duhan Suresini okumak', 'Bolca dua ve istiğfar etmek'],
+        isKandil: true, colorTheme: 'amber'
+    },
+    {
+        date: '2026-02-19',
+        name: 'Ramazan Başlangıcı',
+        description: 'Gönüllerin sultanı Ramazan ayının gelişi.',
+        longDescription: 'Ramazan ayı, Kur\'an-ı Kerim\'in indirilmeye başlandığı, bin aydan daha hayırlı Kadir Gecesi\'ni barındıran mübarek bir aydır. Oruç ibadetinin farz kılındığı bu ay, sabrın, merhametin ve yardımlaşmanın zirveye ulaştığı bir mekteptir.',
+        hadith: { text: 'Ramazan ayı girdiğinde cennet kapıları açılır, cehennem kapıları kapanır ve şeytanlar zincire vurulur.', source: 'Buhari, Müslim' },
+        worshipSuggestions: ['Sahura kalkıp niyet etmek', 'Mukabele ile Kur\'an hatmine başlamak', 'Teravih namazlarına riayet etmek', 'Fıtır sadakası niyetlerini şimdiden yapmak'],
+        colorTheme: 'emerald'
+    },
+    {
+        date: '2026-03-16',
+        name: 'Kadir Gecesi',
+        description: 'Kur\'an\'ın kalplere indiği gece.',
+        longDescription: 'Kur\'an-ı Kerim\'in Levh-i Mahfuz\'dan dünya semasına toptan, oradan da Peygamber Efendimize (s.a.v.) peyderpey inmeye başladığı gecedir. \n"Kadir gecesi bin aydan daha hayırlıdır." (Kadir Suresi, 3). Bu gece, yeryüzüne Cebrail (a.s.) ve arşın melekleri iner, tanyeri ağarıncaya kadar esenlik ve selamet hakim olur.',
+        hadith: { text: 'Kim inanarak ve sevabını Allah\'tan bekleyerek Kadir Gecesi\'ni ihya ederse, geçmiş günahları affedilir.', source: 'Buhari' },
+        worshipSuggestions: ['Kadir Gecesi Duası okumak ("Allahümme inneke afüvvün...")', 'Kadir Suresi\'ni okumak', 'Tesbih namazı kılmak', 'Geceyi tamamen uyanık ve zikirle geçirmek'],
+        isKandil: true, colorTheme: 'emerald'
+    },
+    {
+        date: '2026-03-20',
+        name: 'Ramazan Bayramı',
+        description: 'Ümmetin sevinç ve kucaklaşma günü.',
+        longDescription: 'Bütün bir ay boyunca nefis tezkiyesi yapan, oruç tutan Müslümanların sevinç günüdür. Allah\'ın ikramına şükrün bir ifadesidir. Darılanların barıştığı, büyüklerin ziyaret edildiği, sadaka fıtır ile fakirlerin sevindirildiği mukaddes vakitlerdir.',
+        hadith: { text: 'Bayram günleri sizin için yeme, içme ve Allah\'ı zikretme günleridir.', source: 'Müslim' },
+        worshipSuggestions: ['Sabah erken kalkıp gusletmek ve güzel kokular sürünmek', 'Bayram namazına gitmeden önce tatlı bir şeyler yemek', 'Akrabayı ziyaret (Sıla-i rahim)', 'Yetimleri ve kimsesizleri sevindirmek'],
+        isHoliday: true, colorTheme: 'rose'
+    },
+    {
+        date: '2026-05-26',
+        name: 'Arefe Günü',
+        description: 'Hacılarla birlikte dua etme zamanı.',
+        longDescription: 'Zilhicce ayının 9. günü Arefe günüdür. Hac ibadetinin en önemli rüknü olan Arafat vakfesi bugün yapılır. Arefe gününde tutulan oruç, geçmiş ve gelecek bir yıllık günahlara keffaret sayılmıştır.',
+        hadith: { text: 'Arefe günü tutulan orucun, geçmiş bir yıl ve gelecek bir yılın günahlarına keffaret olacağını Allah\'ın rahmetinden umarım.', source: 'Müslim' },
+        worshipSuggestions: ['Bin İhlas Suresi okumak', 'Oruçlu geçirmek', 'Arafat\'taki hacılar gibi gözyaşıyla dua etmek', 'Teşrik tekbirlerine sabah namazı itibarıyla başlamak'],
+        colorTheme: 'amber'
+    },
+    {
+        date: '2026-05-27',
+        name: 'Kurban Bayramı',
+        description: 'Allah\'a yakınlaşmanın sembolü kurban bayramı.',
+        longDescription: 'İbrahim (a.s.) ve İsmail (a.s.) şahsında sembolleşen teslimiyet ve sadakatin bayramıdır. "Kurban" kelimesi yakınlaşmak demektir. Kesilen kurbanın kanı yere düşmeden Allah katında kabul olunduğu müjdelenmiştir.',
+        hadith: { text: 'Ademoğlu Kurban bayramı gününde Allah indinde kan akıtmaktan (kurban kesmekten) daha sevimli bir amel işlememiştir.', source: 'Tirmizi' },
+        worshipSuggestions: ['Kurban kesmek ve payını yoksullarla paylaşmak', 'Teşrik tekbirlerini (4 gün boyunca) aksatmamak', 'Bayram namazı kılmak', 'Küskünlükleri bitirmek'],
+        isHoliday: true, colorTheme: 'rose'
+    },
+    {
+        date: '2026-06-16',
+        name: 'Hicri Yılbaşı',
+        description: '1 Muharrem, yeni İslami yıl.',
+        longDescription: 'Hicret; Hz. Muhammed (s.a.v.) ve ashabının Mekke\'den Medine\'ye göç edişidir. Medeniyet inşasının, sabrın, fedakarlığın ve yeni bir başlangıcın habercisi olan Muharrem ayının birinci günüdür. Tarih boyunca bu takvim kullanılmıştır.',
+        hadith: { text: 'Ramazan orucundan sonra en faziletli oruç, Allah\'ın ayı olan Muharrem ayında tutulan oruçtur.', source: 'Müslim' },
+        worshipSuggestions: ['Geçen yılın muhasebesini yapmak', 'Yeni yıla dua ve tövbe ile başlamak', 'Muharrem ayının ilk gününü oruçlu geçirmek'],
+        colorTheme: 'cyan'
+    },
+    {
+        date: '2026-06-25',
+        name: 'Aşure Günü',
+        description: 'Muharrem\'in 10. günü, hüzün ve imtihanların hatırlandığı gün.',
+        longDescription: 'Tarihte birçok Peygamberin büyük felaketlerden kurtulduğu, Nuh\'un (a.s.) gemisinin tufandan selametle çıktığı, ancak Kerbela\'da Hz. Hüseyin ve Ehl-i Beyt\'in mazlumca şehit edildiği derin bir hüzün ve imtihan günüdür.',
+        hadith: { text: 'Aşure günü tutulan orucun, geçmiş bir yıllık günaha keffaret olacağını Allah\'ın rahmetinden umarım.', source: 'Müslim' },
+        worshipSuggestions: ['Aşure gününde ve öncesi/sonrası günle birlikte oruç tutmak (9-10 veya 10-11. gün)', 'Eve erzak alarak bereket duası etmek', 'Sadaka vermek', 'Kerbela şehitleri için Yasin Suresi okumak'],
+        colorTheme: 'amber'
+    },
+    {
+        date: '2026-08-24',
+        name: 'Mevlid Kandili',
+        description: 'En Sevgili\'nin doğum günü.',
+        longDescription: 'Rebiülevvel ayının 12. gecesidir. İnsanlığı cehalet ve şirkin karanlığından, İslam\'ın aydınlık nurlarına ulaştıran Hatem-ül Enbiya Hz. Muhammed Mustafa\'nın (s.a.v.) dünyaya gelişinin kutlandığı şerefli bir gecedir.',
+        hadith: { text: 'Kim bana bir defa salavat getirirse, Allah ona on defa merhamet (salat) eder.', source: 'Müslim' },
+        worshipSuggestions: ['Peygamber Efendimizin (s.a.v.) hayatını (Siyer) okumak', 'Çokça Salavat-ı Şerife (Salat-ı Tefriciye, Salat-ı Münciye) getirmek', 'Yoksulları yedirmek', 'Kur\'an-ı Kerim tilaveti'],
+        isKandil: true, colorTheme: 'violet'
+    },
+    {
+        date: '2026-12-10',
+        name: 'Regaip Kandili',
+        description: 'Manevi iklimin habercisi.',
+        longDescription: 'Regaip; rağbet edilen hediye, şefkat, bağış, hibe anlamına gelir. Kur\'an ve Oruç ayları olan Üç Ayların (Recep, Şaban, Ramazan) başlangıcıdır. Allah\'ın sınırsız lütfunun habercisidir.',
+        hadith: { text: 'Allahım! Recep ve Şaban aylarını bizim için mübarek kıl ve bizi Ramazan ayına kavuştur.', source: 'Müsned' },
+        worshipSuggestions: ['Üç aylara hazırlık olarak kaza namazı', 'Recep ayına hürmeten oruç', 'İstiğfarı çoğaltmak'],
+        isKandil: true, colorTheme: 'cyan'
+    }
 ];
 
 export const ReligiousDaysService = {

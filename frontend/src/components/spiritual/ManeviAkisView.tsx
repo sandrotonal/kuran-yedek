@@ -125,15 +125,18 @@ export function ManeviAkisView({ onClose }: { onClose: () => void }) {
                         </div>
                     </div>
 
-                    {/* Action Card - Theme Matched Monochrome Focus */}
-                    <div className="bg-slate-900 dark:bg-[#0f172a] border border-slate-800 dark:border-white/10 rounded-[2rem] p-6 md:p-8 shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center gap-6 justify-between text-white">
+                    {/* Action Card - Theme Matched Elegant Focus */}
+                    <div className="bg-emerald-50/50 dark:bg-emerald-950/30 border border-emerald-200/50 dark:border-emerald-500/10 rounded-[2rem] p-6 md:p-8 shadow-sm relative overflow-hidden flex flex-col md:flex-row items-center gap-6 justify-between transition-colors">
+
+                        {/* Subtly animated glow effect behind the card content */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-emerald-400/5 via-transparent to-teal-400/5 pointer-events-none" />
 
                         <div className="flex-1 relative z-10 w-full text-center md:text-left">
-                            <div className="inline-flex px-3 py-1.5 bg-slate-800 dark:bg-white/10 border border-slate-700 dark:border-white/10 text-slate-300 text-[10px] font-bold uppercase tracking-widest rounded-lg mb-4">
+                            <div className="inline-flex px-3 py-1.5 bg-white dark:bg-white/5 border border-emerald-100 dark:border-white/10 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold uppercase tracking-widest rounded-lg mb-4 shadow-sm">
                                 Günün Meyvesi • 1 Dk Tefekkür
                             </div>
-                            <h4 className="font-bold font-serif text-xl sm:text-2xl mb-2 text-white">Zamanın Bereketi</h4>
-                            <p className="text-sm font-medium text-slate-400 leading-relaxed max-w-xl mx-auto md:mx-0">
+                            <h4 className="font-bold font-serif text-xl sm:text-2xl mb-2 text-slate-900 dark:text-white">Zamanın Bereketi</h4>
+                            <p className="text-sm font-medium text-slate-600 dark:text-slate-400 leading-relaxed max-w-xl mx-auto md:mx-0">
                                 Sadece bir an için dur. Aldığın nefesin, görebildiğin renklerin bir lütuf olduğunu hatırla. Bugün en son ne zaman içtenlikle "Elhamdülillah" dedin?
                             </p>
                         </div>
@@ -145,14 +148,14 @@ export function ManeviAkisView({ onClose }: { onClose: () => void }) {
                                 className={`
                                     w-full md:w-48 py-4 rounded-[1.25rem] font-bold tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-2 overflow-hidden relative group
                                     ${actionDone
-                                        ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 cursor-default'
-                                        : 'bg-white text-slate-900 hover:bg-slate-100 hover:shadow-[0_0_20px_rgba(255,255,255,0.2)] active:scale-95'
+                                        ? 'bg-emerald-100/50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400 cursor-default'
+                                        : 'bg-emerald-600 dark:bg-emerald-500 text-white hover:bg-emerald-700 dark:hover:bg-emerald-600 hover:shadow-lg hover:shadow-emerald-500/30 active:scale-95'
                                     }
                                 `}
                             >
                                 {actionDone ? (
                                     <>
-                                        <div className="absolute inset-0 bg-emerald-500/5 animate-pulse pointer-events-none"></div>
+                                        <div className="absolute inset-0 bg-emerald-500/10 animate-pulse pointer-events-none"></div>
                                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>
                                         <span className="text-[11px]">Etkileşim Sağlandı</span>
                                     </>

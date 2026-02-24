@@ -10,7 +10,7 @@ const PRAYERS = [
 ];
 
 const getPrayerIcon = (id: string, isDone: boolean) => {
-    const baseClass = `w-6 h-6 transition-colors duration-300 ${isDone ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 dark:text-slate-400'}`;
+    const baseClass = `w-6 h-6 transition-colors duration-300 ${isDone ? 'text-emerald-600 dark:text-emerald-400' : 'text-slate-500 dark:text-slate-400'}`;
     switch (id) {
         case 'fajr':
             return <svg className={baseClass} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>;
@@ -86,25 +86,25 @@ export function NamazAsistaniView({ onClose }: { onClose: () => void }) {
 
             <div className={`relative w-full max-w-2xl h-[95vh] md:h-auto md:max-h-[90vh] flex flex-col rounded-[2.5rem] overflow-hidden
                 bg-white/90 dark:bg-[#0c0a09]/90 backdrop-blur-3xl
-                border border-indigo-200/50 dark:border-indigo-500/20
-                shadow-2xl shadow-indigo-900/10 dark:shadow-indigo-900/40 z-10
+                border border-emerald-200/50 dark:border-emerald-500/20
+                shadow-2xl shadow-emerald-900/10 dark:shadow-emerald-900/40 z-10
                 transform transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1)
                 ${isVisible ? 'translate-y-0 scale-100 opacity-100' : 'translate-y-16 scale-95 opacity-0'}
             `}>
 
                 {/* Ambient Glows */}
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
-                <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-sky-500/10 dark:bg-sky-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
+                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 dark:bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
+                <div className="absolute bottom-[-100px] left-[-100px] w-[300px] h-[300px] bg-teal-500/10 dark:bg-teal-500/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
 
                 {/* Minimal Header */}
                 <div className="px-6 py-6 md:px-8 md:py-6 flex items-center justify-between shrink-0 relative z-20 border-b border-black/5 dark:border-white/5">
                     <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-sky-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold font-serif text-slate-900 dark:text-white mb-0">Namaz Asistanı</h2>
-                            <p className="text-[10px] font-semibold text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mt-0.5">Günlük Takip</p>
+                            <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 uppercase tracking-widest mt-0.5">Günlük Takip</p>
                         </div>
                     </div>
                     <button onClick={() => { hapticFeedback(10); handleClose(); }} className="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
@@ -124,7 +124,7 @@ export function NamazAsistaniView({ onClose }: { onClose: () => void }) {
                                 </p>
                             </div>
                             <div className="text-right">
-                                <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-colors ${progressPerc === 100 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-indigo-100 text-indigo-700 dark:bg-indigo-500/20 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-500/30'}`}>
+                                <span className={`text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full transition-colors ${progressPerc === 100 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-500/20 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-emerald-50/50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400/80 border border-emerald-200/50 dark:border-emerald-500/20'}`}>
                                     {progressPerc === 100 ? 'TAMAMLANDI' : 'DEVAM EDİYOR'}
                                 </span>
                             </div>
@@ -132,7 +132,7 @@ export function NamazAsistaniView({ onClose }: { onClose: () => void }) {
                         {/* Thin Progress Bar */}
                         <div className="w-full h-2 bg-slate-200/50 dark:bg-white/5 rounded-full overflow-hidden relative mt-2">
                             <div
-                                className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out ${progressPerc === 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-indigo-500 to-sky-400'}`}
+                                className={`absolute top-0 left-0 h-full rounded-full transition-all duration-1000 ease-out ${progressPerc === 100 ? 'bg-emerald-500' : 'bg-gradient-to-r from-emerald-500 to-teal-400'}`}
                                 style={{ width: `${progressPerc}%` }}
                             />
                         </div>
@@ -146,22 +146,22 @@ export function NamazAsistaniView({ onClose }: { onClose: () => void }) {
                                 className={`
                                     relative overflow-hidden rounded-[1.5rem] p-4 md:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all duration-300
                                     ${prayer.isDone
-                                        ? 'bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-200/50 dark:border-indigo-500/20 shadow-sm'
+                                        ? 'bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-200/50 dark:border-emerald-500/20 shadow-sm'
                                         : 'bg-white/60 dark:bg-black/40 border border-slate-200/50 dark:border-white/5 hover:border-slate-300/50 dark:hover:border-white/10 shadow-sm'
                                     }
                                     backdrop-blur-md group
                                 `}
                             >
                                 <div className="flex items-center gap-4 z-10 w-full sm:w-auto">
-                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${prayer.isDone ? 'bg-white dark:bg-indigo-950 shadow-sm border border-indigo-100 dark:border-indigo-800' : 'bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5'}`}>
+                                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300 ${prayer.isDone ? 'bg-white dark:bg-emerald-950 shadow-sm border border-emerald-100 dark:border-emerald-800' : 'bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/5'}`}>
                                         {getPrayerIcon(prayer.id, prayer.isDone)}
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center justify-between sm:justify-start gap-4">
-                                            <h4 className={`text-lg font-bold font-serif ${prayer.isDone ? 'text-indigo-900 dark:text-indigo-100' : 'text-slate-900 dark:text-slate-200'}`}>
+                                            <h4 className={`text-lg font-bold font-serif ${prayer.isDone ? 'text-emerald-900 dark:text-emerald-100' : 'text-slate-900 dark:text-slate-200'}`}>
                                                 {prayer.name}
                                             </h4>
-                                            <div className={`text-sm font-bold font-mono tracking-wider ${prayer.isDone ? 'text-indigo-600/70 dark:text-indigo-400/70' : 'text-slate-400 dark:text-slate-500'}`}>
+                                            <div className={`text-sm font-bold font-mono tracking-wider ${prayer.isDone ? 'text-emerald-600/70 dark:text-emerald-400/70' : 'text-slate-400 dark:text-slate-500'}`}>
                                                 {prayer.time}
                                             </div>
                                         </div>
@@ -186,11 +186,10 @@ export function NamazAsistaniView({ onClose }: { onClose: () => void }) {
                                         className={`
                                             w-12 h-12 sm:w-10 sm:h-10 flex shrink-0 items-center justify-center rounded-lg transition-all duration-300 border active:scale-95
                                             ${prayer.isDone
-                                                ? 'bg-indigo-600 dark:bg-indigo-500 text-white border-indigo-600 dark:border-indigo-400 shadow-md shadow-indigo-500/20'
+                                                ? 'bg-emerald-600 dark:bg-emerald-500 text-white border-emerald-600 dark:border-emerald-400 shadow-md shadow-emerald-500/20'
                                                 : 'bg-transparent text-slate-400 dark:text-slate-500 border-slate-200 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/5 hover:text-slate-600 dark:hover:text-slate-300'
                                             }
-                                        `}
-                                    >
+                                        `}                                    >
                                         {prayer.isDone ? (
                                             <svg className="w-5 h-5 animate-in zoom-in-50 duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />

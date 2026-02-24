@@ -178,7 +178,7 @@ export function ReligiousDaysView({ onClose }: ReligiousDaysViewProps) {
                             <button
                                 key={idx}
                                 onClick={() => setSelectedDay(day)}
-                                className="w-full group flex items-center gap-6 p-5 rounded-2xl hover:bg-theme-surface transition-all duration-300 border border-transparent hover:border-theme-border/50"
+                                className="w-full group flex items-center gap-6 p-5 rounded-2xl transition-all duration-300 border border-transparent hover:border-theme-border/50 bg-transparent"
                             >
                                 {/* Date Box */}
                                 <div className="flex flex-col items-center min-w-[3.5rem] py-1 border-r border-theme-border/50 pr-6 group-hover:border-emerald-500/30 transition-colors">

@@ -1,6 +1,43 @@
 import { useState, useEffect } from 'react';
 import { hapticFeedback } from '../../lib/constants';
 
+// Gecikmesiz, sıfır ağ yükü yaratan Sentetik Tık sesi (Yumuşak Tesbih/Su Damlası efekti)
+let audioCtx: any = null;
+const playTickSound = (isEnabled: boolean) => {
+    if (!isEnabled) return;
+
+    try {
+        if (!audioCtx) {
+            const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+            audioCtx = new AudioContext();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        // Çok daha soft, huzurlu bir vuruş sesi (low pass filter hissi)
+        oscillator.type = 'sine';
+        // 400Hz'den 100Hz'e düşüş (daha tok)
+        oscillator.frequency.setValueAtTime(400, audioCtx.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.08);
+
+        // Ses seviyesi de daha düşük ve sönümlenmesi (release) biraz daha yavaş
+        gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+
+        oscillator.start(audioCtx.currentTime);
+        oscillator.stop(audioCtx.currentTime + 0.1);
+    } catch (e) {
+        // Sessizce hatayı yut
+    }
+};
+
 interface ZikirmatikViewProps {
     onClose: () => void;
 }
@@ -11,16 +48,12 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
     const [isTargetModalOpen, setIsTargetModalOpen] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
 
+    // Ses (Mute/Unmute) State
+    const [isSoundEnabled, setIsSoundEnabled] = useState(true);
+
     // Stats State
     const [totalZikir, setTotalZikir] = useState(0);
     const [streak, setStreak] = useState(1);
-
-    // Audio State
-    const [audio] = useState(new Audio('data:audio/mp3;base64,SUQzBAAAAAAAI1RTSVMAAAAPAAADTGF2ZjU4LjI5LjEwMAAAAAAAAAAAAAAA//uQZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWgAAAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAAP8AAAgAAAAAAgAAAAAAaAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAEP8AAAgAAAAAAgAAAAAAbAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAIP8AAAgAAAAAAgAAAAAAcAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAYP8AAAgAAAAAAgAAAAAAdAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAmP8AAAgAAAAAAgAAAAAAeAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZAwP8AAAgAAAAAAgAAAAAAfAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZA4P8AAAgAAAAAAgAAAAAAgAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZBEP8AAAgAAAAAAgAAAAAAhAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZBIP8AAAgAAAAAAgAAAAAAiAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZBoP8AAAgAAAAAAgAAAAAAjAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZCEP8AAAgAAAAAAgAAAAAAkAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZCUP8AAAgAAAAAAgAAAAAAlAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZCsP8AAAgAAAAAAgAAAAAAmAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZDAP8AAAgAAAAAAgAAAAAAnAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZDoP8AAAgAAAAAAgAAAAAAoAAABAAAAAAAAAAAAAAAAAAAAAAAAAA//uQZEYP8AAAgAAAAAAgAAAAAAowAABAAAAAAAAAAAAAAAAAAAAAAAAAA'));
-
-    useEffect(() => {
-        audio.volume = 0.2; // Low volume, subtle
-    }, [audio]);
 
     // Load state from localStorage on mount
     useEffect(() => {
@@ -29,7 +62,9 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
         const savedTotal = localStorage.getItem('zikir_total_count');
         const savedStreak = localStorage.getItem('zikir_streak');
         const lastDate = localStorage.getItem('zikir_last_date');
+        const savedSound = localStorage.getItem('zikir_sound_enabled');
 
+        if (savedSound !== null) setIsSoundEnabled(savedSound === 'true');
         if (savedCount) setCount(parseInt(savedCount));
         if (savedTarget) setTarget(parseInt(savedTarget));
         if (savedTotal) setTotalZikir(parseInt(savedTotal));
@@ -58,7 +93,8 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
     useEffect(() => {
         localStorage.setItem('zikir_count', count.toString());
         localStorage.setItem('zikir_target', target.toString());
-    }, [count, target]);
+        localStorage.setItem('zikir_sound_enabled', isSoundEnabled.toString());
+    }, [count, target, isSoundEnabled]);
 
     const updateStats = () => {
         const newTotal = totalZikir + 1;
@@ -97,10 +133,7 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
         hapticFeedback(15); // Medium feedback for count
 
         // Play Sound
-        if (audio) {
-            audio.currentTime = 0;
-            audio.play().catch(e => console.log('Audio play failed', e));
-        }
+        playTickSound(isSoundEnabled);
 
         // Check for target completion
         if (newCount > 0 && newCount % target === 0) {
@@ -145,6 +178,19 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
                     </h2>
                 </div>
                 <div className="flex gap-2">
+                    {/* Ses (Audio) Toggle Button */}
+                    <button
+                        onClick={() => setIsSoundEnabled(!isSoundEnabled)}
+                        className={`p-2.5 rounded-full border transition-colors ${isSoundEnabled ? 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/30' : 'bg-theme-surface border-theme-border/50 text-theme-muted hover:text-emerald-500'}`}
+                        title={isSoundEnabled ? "Sesi Kapat" : "Sesi Aç"}
+                    >
+                        {isSoundEnabled ? (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                        ) : (
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" /></svg>
+                        )}
+                    </button>
+
                     <button
                         onClick={() => setIsTargetModalOpen(true)}
                         className="p-2.5 rounded-full bg-theme-surface border border-theme-border/50 text-theme-muted hover:text-emerald-500 transition-colors"
@@ -224,21 +270,19 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
 
             {/* Target Modal - Redesigned (Soft & Modern) */}
             {isTargetModalOpen && (
-                <div className="fixed inset-0 z-[70] flex items-center justify-center p-4" style={{ backdropFilter: 'blur(8px)' }}>
-                    <div className="absolute inset-0 bg-black/40 transition-opacity" onClick={() => setIsTargetModalOpen(false)}></div>
-                    <div className="bg-theme-surface w-full max-w-sm rounded-[2.5rem] shadow-2xl border border-theme-border/50 relative z-10 overflow-hidden animate-in zoom-in-95 duration-300">
-                        {/* Decorative Header */}
-                        <div className="absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-emerald-500/10 to-transparent pointer-events-none"></div>
+                <div className="fixed inset-0 z-[70] flex items-center justify-center p-4">
+                    <div className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity" onClick={() => setIsTargetModalOpen(false)}></div>
+                    <div className="bg-white dark:bg-[#151c2a] w-full max-w-sm rounded-[2rem] shadow-2xl border border-slate-200 dark:border-white/[0.05] relative z-10 overflow-hidden animate-in zoom-in-95 duration-300">
 
-                        <div className="p-6 pt-8 relative">
-                            <div className="text-center mb-6">
-                                <div className="w-14 h-14 mx-auto bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl flex items-center justify-center mb-3 text-emerald-600 dark:text-emerald-400 ring-1 ring-emerald-500/20">
-                                    <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
-                                </div>
-                                <h3 className="text-xl font-bold font-serif text-theme-text">Hedefini Seç</h3>
+                        <div className="p-6 pt-9 relative text-center">
+
+                            <div className="w-14 h-14 mx-auto bg-emerald-50 dark:bg-emerald-500/5 rounded-3xl flex items-center justify-center mb-5 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.08)]">
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3 mb-6">
+                            <h3 className="text-xl font-bold font-serif text-slate-800 dark:text-white mb-8">Hedefini Seç</h3>
+
+                            <div className="grid grid-cols-2 gap-3 mb-8">
                                 {[33, 99, 100, 500, 1000].map(val => (
                                     <button
                                         key={val}
@@ -247,10 +291,10 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
                                             hapticFeedback(10);
                                         }}
                                         className={`
-                                            relative h-12 rounded-xl border transition-all duration-200 flex items-center justify-center
+                                            relative h-12 rounded-[0.85rem] border transition-all duration-200 flex items-center justify-center font-medium
                                             ${target === val
-                                                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold shadow-emerald-500/10 shadow-lg'
-                                                : 'border-theme-border/50 bg-theme-bg/50 text-theme-muted hover:border-emerald-500/30'
+                                                ? 'border-emerald-500 dark:border-emerald-500/70 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 shadow-[0_0_12px_rgba(16,185,129,0.1)]'
+                                                : 'border-slate-200 dark:border-white/[0.04] bg-white dark:bg-[#0f1521] text-slate-600 dark:text-white/60 hover:bg-slate-50 dark:hover:bg-white/5'
                                             }
                                         `}
                                     >
@@ -264,7 +308,7 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
                                             setTarget(parseInt(custom));
                                         }
                                     }}
-                                    className="relative h-12 rounded-xl border border-dashed border-theme-border/50 bg-theme-bg/30 text-theme-muted hover:border-emerald-500/30 hover:text-emerald-500 transition-colors font-medium flex items-center justify-center"
+                                    className="relative h-12 rounded-[0.85rem] border border-dashed border-slate-300 dark:border-white/10 bg-slate-50 dark:bg-[#0f1521]/60 text-slate-500 dark:text-white/50 hover:border-emerald-500/40 hover:text-emerald-500 transition-colors font-medium flex items-center justify-center"
                                 >
                                     Özel
                                 </button>
@@ -272,7 +316,7 @@ export function ZikirmatikView({ onClose }: ZikirmatikViewProps) {
 
                             <button
                                 onClick={() => setIsTargetModalOpen(false)}
-                                className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-xl font-bold tracking-wide transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2"
+                                className="w-full h-[3.25rem] bg-emerald-600 hover:bg-emerald-500 active:scale-[0.98] text-white rounded-[0.85rem] font-bold tracking-wide transition-all shadow-[0_4px_15px_rgba(16,185,129,0.3)] flex items-center justify-center"
                             >
                                 <span>Bismillah, Başla</span>
                             </button>

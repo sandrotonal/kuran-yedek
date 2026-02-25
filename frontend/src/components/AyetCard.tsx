@@ -150,15 +150,24 @@ export function AyetCard({
                     <button
                         onClick={handleToggleFavorite}
                         className={`
-                            w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90
+                            relative w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 active:scale-75
                             ${isFavorite
-                                ? 'text-rose-500 bg-rose-100 dark:bg-rose-500/15 ring-1 ring-rose-300 dark:ring-rose-500/30'
+                                ? 'text-rose-500 bg-rose-100 dark:bg-rose-500/15 ring-1 ring-rose-300 dark:ring-rose-500/30 shadow-[0_0_12px_rgba(244,63,94,0.25)]'
                                 : 'text-slate-300 dark:text-white/22 hover:text-rose-500 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10'
                             }
                         `}
-                        aria-label="Favorilere Ekle"
+                        aria-label={isFavorite ? "Favorilerden Çıkar" : "Favorilere Ekle"}
                     >
-                        <svg className="w-4 h-4" fill={isFavorite ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                        {isFavorite && (
+                            <span className="absolute inset-0 rounded-full bg-rose-400 opacity-20 animate-[ping_0.4s_cubic-bezier(0,0,0.2,1)_1] pointer-events-none" />
+                        )}
+                        <svg
+                            key={isFavorite ? 'filled' : 'outline'}
+                            className={`w-4 h-4 transition-transform duration-300 ${isFavorite ? 'animate-in zoom-in-[0.3] duration-300 drop-shadow-[0_0_6px_rgba(244,63,94,0.6)] fill-rose-500' : ''}`}
+                            fill={isFavorite ? "currentColor" : "none"}
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                        >
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                         </svg>
                     </button>

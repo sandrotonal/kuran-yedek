@@ -61,6 +61,7 @@ function AppContent() {
     // Initialize dark mode on mount
     useEffect(() => {
         document.documentElement.classList.add('dark');
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0f172a');
     }, [isMobile]);
 
     const { data, isLoading, isError } = useQuery({
@@ -84,8 +85,10 @@ function AppContent() {
         setIsDark(newDark);
         if (newDark) {
             document.documentElement.classList.add('dark');
+            document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0f172a');
         } else {
             document.documentElement.classList.remove('dark');
+            document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#fdfbf7');
         }
     };
 
@@ -103,7 +106,7 @@ function AppContent() {
                 <NotificationManager />
 
                 {/* Header */}
-                <header className="sticky top-0 z-40 bg-theme-bg/80 backdrop-blur-md border-b border-theme-border/50 transition-all duration-300 supports-[backdrop-filter]:bg-theme-bg/60">
+                <header className="sticky top-0 z-40 bg-theme-bg border-b border-theme-border/50 transition-all duration-300">
                     <div className="max-w-7xl mx-auto px-4 md:px-6 py-4 md:py-5 relative">
                         <div className="flex justify-between items-center">
                             <div className="flex items-center gap-3 md:gap-4">
